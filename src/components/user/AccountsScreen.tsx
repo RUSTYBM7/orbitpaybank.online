@@ -325,7 +325,7 @@ export default function AccountsScreen() {
         </div>
       </GlassCard>
 
-      {/* Create Account Modal */}
+      {/* Create Account Modal - Fixed Footer */}
       <AnimatePresence>
         {showCreateModal && (
           <motion.div
@@ -340,88 +340,100 @@ export default function AccountsScreen() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 25 }}
-              className="w-full bg-white rounded-t-3xl p-5 max-h-[85vh] overflow-y-auto"
+              className="w-full bg-white rounded-t-3xl flex flex-col"
+              style={{ maxHeight: '92vh' }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="w-12 h-1 bg-emerald-800/20 rounded-full mx-auto mb-4" />
-              <h2 className="text-xl font-bold text-emerald-800 mb-6">Create New Account</h2>
-
-              {/* Account Type Selection */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                {[
-                  { id: 'checking', name: 'Checking', icon: Building2, desc: 'For daily transactions' },
-                  { id: 'savings', name: 'Savings', icon: PiggyBank, desc: 'Grow your money' },
-                ].map((type) => (
-                  <motion.button
-                    key={type.id}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => setSelectedType(type.id as 'checking' | 'savings')}
-                    className={`p-4 rounded-2xl border-2 transition-all text-center ${
-                      selectedType === type.id
-                        ? 'border-[#A8E6CF] bg-[#A8E6CF]/10'
-                        : 'border-[#0A0A0A]/10'
-                    }`}
-                  >
-                    <type.icon className={`w-8 h-8 mx-auto mb-2 ${selectedType === type.id ? 'text-[#2ECC71]' : 'text-emerald-800/40'}`} />
-                    <h3 className="font-medium text-emerald-800">{type.name}</h3>
-                    <p className="text-xs text-emerald-800/50">{type.desc}</p>
-                  </motion.button>
-                ))}
+              {/* Header */}
+              <div className="flex-shrink-0 px-5 pt-4 pb-3 border-b border-emerald-100/50">
+                <div className="w-12 h-1 bg-emerald-800/20 rounded-full mx-auto mb-4" />
+                <h2 className="text-xl font-bold text-emerald-800">Create New Account</h2>
               </div>
 
-              {/* Account Details */}
-              <div className="space-y-4">
-                <GlassInput
-                  label="Account Name"
-                  placeholder="e.g., Emergency Fund"
-                />
-                <div>
-                  <label className="block text-sm font-medium text-emerald-800 mb-2">Initial Deposit</label>
-                  <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-800/40">$</span>
-                    <input
-                      type="number"
-                      placeholder="0.00"
-                      className="w-full pl-8 pr-4 py-3 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 border border-[#0A0A0A]/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A8E6CF] focus:border-transparent"
-                    />
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
+                {/* Account Type Selection */}
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  {[
+                    { id: 'checking', name: 'Checking', icon: Building2, desc: 'For daily transactions' },
+                    { id: 'savings', name: 'Savings', icon: PiggyBank, desc: 'Grow your money' },
+                  ].map((type) => (
+                    <motion.button
+                      key={type.id}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setSelectedType(type.id as 'checking' | 'savings')}
+                      className={`p-4 rounded-2xl border-2 transition-all text-center ${
+                        selectedType === type.id
+                          ? 'border-[#A8E6CF] bg-[#A8E6CF]/10'
+                          : 'border-[#0A0A0A]/10'
+                      }`}
+                    >
+                      <type.icon className={`w-8 h-8 mx-auto mb-2 ${selectedType === type.id ? 'text-[#2ECC71]' : 'text-emerald-800/40'}`} />
+                      <h3 className="font-medium text-emerald-800">{type.name}</h3>
+                      <p className="text-xs text-emerald-800/50">{type.desc}</p>
+                    </motion.button>
+                  ))}
+                </div>
+
+                {/* Account Details */}
+                <div className="space-y-4">
+                  <GlassInput
+                    label="Account Name"
+                    placeholder="e.g., Emergency Fund"
+                  />
+                  <div>
+                    <label className="block text-sm font-medium text-emerald-800 mb-2">Initial Deposit</label>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-800/40">$</span>
+                      <input
+                        type="number"
+                        placeholder="0.00"
+                        className="w-full pl-8 pr-4 py-3 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 border border-[#0A0A0A]/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A8E6CF] focus:border-transparent"
+                      />
+                    </div>
                   </div>
                 </div>
+
+                {/* Interest Rate Preview */}
+                {selectedType && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-4 p-4 bg-[#A8E6CF]/10 rounded-xl"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-emerald-800/60">Estimated APY</span>
+                      <span className="text-lg font-bold text-[#2ECC71]">
+                        {selectedType === 'savings' ? '4.5%' : '0.5%'}
+                      </span>
+                    </div>
+                  </motion.div>
+                )}
               </div>
 
-              {/* Interest Rate Preview */}
-              {selectedType && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-4 p-4 bg-[#A8E6CF]/10 rounded-xl"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-emerald-800/60">Estimated APY</span>
-                    <span className="text-lg font-bold text-[#2ECC71]">
-                      {selectedType === 'savings' ? '4.5%' : '0.5%'}
-                    </span>
-                  </div>
-                </motion.div>
-              )}
-
-              <div className="mt-6 flex gap-3">
-                <GlassButton
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() => setShowCreateModal(false)}
-                >
-                  Cancel
-                </GlassButton>
-                <GlassButton
-                  className="flex-1"
-                  disabled={!selectedType}
-                  onClick={() => {
-                    // Create account logic would go here
-                    setShowCreateModal(false);
-                  }}
-                >
-                  Create Account
-                </GlassButton>
+              {/* Fixed Footer - ALWAYS VISIBLE */}
+              <div
+                className="flex-shrink-0 px-5 py-4 border-t border-emerald-100/50 bg-white"
+                style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 16px), 24px)' }}
+              >
+                <div className="flex gap-3">
+                  <GlassButton
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => setShowCreateModal(false)}
+                  >
+                    Cancel
+                  </GlassButton>
+                  <GlassButton
+                    className="flex-1"
+                    disabled={!selectedType}
+                    onClick={() => {
+                      setShowCreateModal(false);
+                    }}
+                  >
+                    Create Account
+                  </GlassButton>
+                </div>
               </div>
             </motion.div>
           </motion.div>

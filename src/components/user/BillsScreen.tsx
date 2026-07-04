@@ -296,88 +296,101 @@ export default function BillsScreen() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 25 }}
-              className="w-full bg-white rounded-t-3xl p-5 max-h-[85vh] overflow-y-auto"
+              className="w-full bg-white rounded-t-3xl flex flex-col"
+              style={{ maxHeight: '92vh' }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="w-12 h-1 bg-emerald-800/20 rounded-full mx-auto mb-4" />
-              <h2 className="text-xl font-bold text-emerald-800 mb-6">Pay a Bill</h2>
-
-              {/* Biller Selection */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-emerald-800 mb-2">Select Biller</label>
-                <div className="grid grid-cols-3 gap-2">
-                  {billerCategories.map((category) => (
-                    <motion.button
-                      key={category.id}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setSelectedBiller(category.id)}
-                      className={`p-3 rounded-xl border-2 transition-all ${
-                        selectedBiller === category.id
-                          ? 'border-[#A8E6CF] bg-[#A8E6CF]/10'
-                          : 'border-[#0A0A0A]/10'
-                      }`}
-                    >
-                      <category.icon className={`w-6 h-6 mx-auto mb-1 ${
-                        selectedBiller === category.id ? 'text-[#2ECC71]' : 'text-emerald-800/40'
-                      }`} />
-                      <span className="text-xs text-emerald-800">{category.name}</span>
-                    </motion.button>
-                  ))}
-                </div>
+              {/* Header */}
+              <div className="flex-shrink-0 px-5 pt-4 pb-3 border-b border-emerald-100/50">
+                <div className="w-12 h-1 bg-emerald-800/20 rounded-full mx-auto mb-4" />
+                <h2 className="text-xl font-bold text-emerald-800">Pay a Bill</h2>
               </div>
 
-              <div className="space-y-4">
-                <GlassInput
-                  label="Account Number"
-                  placeholder="Enter biller account number"
-                />
-                <GlassInput
-                  label="Amount"
-                  type="number"
-                  placeholder="0.00"
-                  prefix="$"
-                />
-                <GlassInput
-                  label="Payment Date"
-                  type="date"
-                />
-              </div>
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
+                {/* Biller Selection */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-emerald-800 mb-2">Select Biller</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {billerCategories.map((category) => (
+                      <motion.button
+                        key={category.id}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setSelectedBiller(category.id)}
+                        className={`p-3 rounded-xl border-2 transition-all ${
+                          selectedBiller === category.id
+                            ? 'border-[#A8E6CF] bg-[#A8E6CF]/10'
+                            : 'border-[#0A0A0A]/10'
+                        }`}
+                      >
+                        <category.icon className={`w-6 h-6 mx-auto mb-1 ${
+                          selectedBiller === category.id ? 'text-[#2ECC71]' : 'text-emerald-800/40'
+                        }`} />
+                        <span className="text-xs text-emerald-800">{category.name}</span>
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
 
-              {/* Payment Summary */}
-              <div className="mt-6 p-4 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 rounded-xl">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-emerald-800/60">Bill Amount</span>
-                  <span className="text-sm text-emerald-800">$0.00</span>
+                <div className="space-y-4">
+                  <GlassInput
+                    label="Account Number"
+                    placeholder="Enter biller account number"
+                  />
+                  <GlassInput
+                    label="Amount"
+                    type="number"
+                    placeholder="0.00"
+                    prefix="$"
+                  />
+                  <GlassInput
+                    label="Payment Date"
+                    type="date"
+                  />
                 </div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-emerald-800/60">Processing Fee</span>
-                  <span className="text-sm text-emerald-800">$0.00</span>
-                </div>
-                <div className="border-t border-[#0A0A0A]/10 pt-2 mt-2">
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium text-emerald-800">Total</span>
-                    <span className="text-lg font-bold text-emerald-800">$0.00</span>
+
+                {/* Payment Summary */}
+                <div className="mt-6 p-4 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 rounded-xl">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-emerald-800/60">Bill Amount</span>
+                    <span className="text-sm text-emerald-800">$0.00</span>
+                  </div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-emerald-800/60">Processing Fee</span>
+                    <span className="text-sm text-emerald-800">$0.00</span>
+                  </div>
+                  <div className="border-t border-[#0A0A0A]/10 pt-2 mt-2">
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium text-emerald-800">Total</span>
+                      <span className="text-lg font-bold text-emerald-800">$0.00</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-6 flex gap-3">
-                <GlassButton
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() => setShowPayModal(false)}
-                >
-                  Cancel
-                </GlassButton>
-                <GlassButton
-                  className="flex-1"
-                  disabled={!selectedBiller}
-                  onClick={() => {
-                    setShowPayModal(false);
-                  }}
-                >
-                  Pay Bill
-                </GlassButton>
+              {/* Fixed Footer - ALWAYS VISIBLE */}
+              <div
+                className="flex-shrink-0 px-5 py-4 border-t border-emerald-100/50 bg-white"
+                style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 16px), 24px)' }}
+              >
+                <div className="flex gap-3">
+                  <GlassButton
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => setShowPayModal(false)}
+                  >
+                    Cancel
+                  </GlassButton>
+                  <GlassButton
+                    className="flex-1"
+                    disabled={!selectedBiller}
+                    onClick={() => {
+                      setShowPayModal(false);
+                    }}
+                  >
+                    Pay Bill
+                  </GlassButton>
+                </div>
               </div>
             </motion.div>
           </motion.div>

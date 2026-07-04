@@ -210,64 +210,77 @@ export default function ScheduledScreen() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 25 }}
-              className="w-full bg-white rounded-t-3xl p-5 max-h-[85vh] overflow-y-auto"
+              className="w-full bg-white rounded-t-3xl flex flex-col"
+              style={{ maxHeight: '92vh' }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="w-12 h-1 bg-[#0A0A0A]/20 rounded-full mx-auto mb-4" />
-              <h2 className="text-xl font-bold text-[#0A0A0A] mb-6">Schedule Transfer</h2>
-
-              <div className="space-y-4">
-                <GlassInput
-                  label="Recipient Name"
-                  placeholder="Enter recipient name"
-                />
-                <GlassInput
-                  label="Account Number"
-                  placeholder="Enter account number"
-                />
-                <GlassInput
-                  label="Amount"
-                  type="number"
-                  placeholder="0.00"
-                  prefix="$"
-                />
-
-                <div>
-                  <label className="block text-sm font-medium text-[#0A0A0A] mb-2">Frequency</label>
-                  <div className="grid grid-cols-4 gap-2">
-                    {['daily', 'weekly', 'biweekly', 'monthly'].map((freq) => (
-                      <motion.button
-                        key={freq}
-                        whileTap={{ scale: 0.95 }}
-                        className="py-2 px-3 rounded-xl border border-[#0A0A0A]/10 text-sm font-medium text-[#0A0A0A]/60 hover:bg-[#F7F9F4] transition-colors capitalize"
-                      >
-                        {freq === 'biweekly' ? '2 Weeks' : freq}
-                      </motion.button>
-                    ))}
-                  </div>
-                </div>
-
-                <GlassInput
-                  label="Start Date"
-                  type="date"
-                />
-                <GlassInput
-                  label="End Date (Optional)"
-                  type="date"
-                />
+              {/* Header */}
+              <div className="flex-shrink-0 px-5 pt-4 pb-3 border-b border-gray-100">
+                <div className="w-12 h-1 bg-[#0A0A0A]/20 rounded-full mx-auto mb-4" />
+                <h2 className="text-xl font-bold text-[#0A0A0A]">Schedule Transfer</h2>
               </div>
 
-              <div className="mt-6 flex gap-3">
-                <GlassButton
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() => setShowCreateModal(false)}
-                >
-                  Cancel
-                </GlassButton>
-                <GlassButton className="flex-1" onClick={() => setShowCreateModal(false)}>
-                  Create Schedule
-                </GlassButton>
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
+                <div className="space-y-4">
+                  <GlassInput
+                    label="Recipient Name"
+                    placeholder="Enter recipient name"
+                  />
+                  <GlassInput
+                    label="Account Number"
+                    placeholder="Enter account number"
+                  />
+                  <GlassInput
+                    label="Amount"
+                    type="number"
+                    placeholder="0.00"
+                    prefix="$"
+                  />
+
+                  <div>
+                    <label className="block text-sm font-medium text-[#0A0A0A] mb-2">Frequency</label>
+                    <div className="grid grid-cols-4 gap-2">
+                      {['daily', 'weekly', 'biweekly', 'monthly'].map((freq) => (
+                        <motion.button
+                          key={freq}
+                          whileTap={{ scale: 0.95 }}
+                          className="py-2 px-3 rounded-xl border border-[#0A0A0A]/10 text-sm font-medium text-[#0A0A0A]/60 hover:bg-[#F7F9F4] transition-colors capitalize"
+                        >
+                          {freq === 'biweekly' ? '2 Weeks' : freq}
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <GlassInput
+                    label="Start Date"
+                    type="date"
+                  />
+                  <GlassInput
+                    label="End Date (Optional)"
+                    type="date"
+                  />
+                </div>
+              </div>
+
+              {/* Fixed Footer - ALWAYS VISIBLE */}
+              <div
+                className="flex-shrink-0 px-5 py-4 border-t border-gray-100 bg-white"
+                style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 16px), 24px)' }}
+              >
+                <div className="flex gap-3">
+                  <GlassButton
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => setShowCreateModal(false)}
+                  >
+                    Cancel
+                  </GlassButton>
+                  <GlassButton className="flex-1" onClick={() => setShowCreateModal(false)}>
+                    Create Schedule
+                  </GlassButton>
+                </div>
               </div>
             </motion.div>
           </motion.div>

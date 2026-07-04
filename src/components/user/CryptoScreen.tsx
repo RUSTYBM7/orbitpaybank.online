@@ -401,173 +401,185 @@ export default function CryptoScreen() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 25 }}
-              className="w-full bg-white rounded-t-3xl p-5 max-h-[85vh] overflow-y-auto"
+              className="w-full bg-white rounded-t-3xl flex flex-col"
+              style={{ maxHeight: '92vh' }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="w-12 h-1 bg-emerald-800/20 rounded-full mx-auto mb-4" />
-              <h2 className="text-xl font-bold text-emerald-800 mb-6">
-                {showActionModal === 'deposit' && 'Buy Crypto'}
-                {showActionModal === 'withdraw' && 'Sell Crypto'}
-                {showActionModal === 'send' && 'Send Crypto'}
-                {showActionModal === 'receive' && 'Receive Crypto'}
-              </h2>
-
-              {/* Action Type Tabs */}
-              <div className="flex gap-2 mb-6">
-                {(['deposit', 'withdraw', 'send', 'receive'] as const).map((action) => (
-                  <button
-                    key={action}
-                    onClick={() => setActionTab(action)}
-                    className={`flex-1 py-2 px-3 rounded-xl text-xs font-medium transition-all ${
-                      actionTab === action
-                        ? 'bg-emerald-800 text-white'
-                        : 'bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 text-emerald-800/60'
-                    }`}
-                  >
-                    {action.charAt(0).toUpperCase() + action.slice(1)}
-                  </button>
-                ))}
+              {/* Header */}
+              <div className="flex-shrink-0 px-5 pt-4 pb-3 border-b border-emerald-100/50">
+                <div className="w-12 h-1 bg-emerald-800/20 rounded-full mx-auto mb-4" />
+                <h2 className="text-xl font-bold text-emerald-800">
+                  {showActionModal === 'deposit' && 'Buy Crypto'}
+                  {showActionModal === 'withdraw' && 'Sell Crypto'}
+                  {showActionModal === 'send' && 'Send Crypto'}
+                  {showActionModal === 'receive' && 'Receive Crypto'}
+                </h2>
               </div>
 
-              {/* Asset Selection */}
-              <div className="mb-4">
-                <p className="text-sm font-medium text-emerald-800 mb-2">Asset</p>
-                <div className="flex gap-2">
-                  {cryptoAssets.map((asset) => (
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
+                {/* Action Type Tabs */}
+                <div className="flex gap-2 mb-6">
+                  {(['deposit', 'withdraw', 'send', 'receive'] as const).map((action) => (
                     <button
-                      key={asset.id}
-                      onClick={() => setSelectedAsset(asset)}
-                      className={`flex-1 py-3 px-2 rounded-xl border-2 transition-all flex flex-col items-center ${
-                        selectedAsset.id === asset.id
-                          ? 'border-[#0A0A0A] bg-emerald-800/5'
-                          : 'border-transparent bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50'
+                      key={action}
+                      onClick={() => setActionTab(action)}
+                      className={`flex-1 py-2 px-3 rounded-xl text-xs font-medium transition-all ${
+                        actionTab === action
+                          ? 'bg-emerald-800 text-white'
+                          : 'bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 text-emerald-800/60'
                       }`}
                     >
-                      <span className="text-sm">{asset.symbol}</span>
-                      <span className="text-xs text-emerald-800/40">{asset.balance}</span>
+                      {action.charAt(0).toUpperCase() + action.slice(1)}
                     </button>
                   ))}
-                </div>
-              </div>
+</div>
 
-              {/* Amount Input */}
-              <div className="mb-4">
-                <p className="text-sm font-medium text-emerald-800 mb-2">
-                  {showActionModal === 'send' || showActionModal === 'receive' ? 'Amount' : 'Amount in USD'}
-                </p>
-                <div className="flex items-center gap-2 p-4 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 rounded-xl">
-                  <DollarSign className="w-5 h-5 text-emerald-800/40" />
-                  <input
-                    type="number"
-                    value={transferAmount}
-                    onChange={(e) => setTransferAmount(e.target.value)}
-                    placeholder="0.00"
-                    className="flex-1 bg-transparent outline-none text-lg text-emerald-800"
-                  />
-                  <span className="text-sm text-emerald-800/40">
-                    {showActionModal === 'send' || showActionModal === 'receive' ? selectedAsset.symbol : 'USD'}
-                  </span>
-                </div>
-                {transferAmount && (
-                  <p className="text-xs text-emerald-800/40 mt-1">
-                    ≈ {selectedAsset.symbol} {(Number(transferAmount) / selectedAsset.price).toFixed(6)}
-                  </p>
-                )}
-              </div>
-
-              {/* Recipient Address (for Send) */}
-              {showActionModal === 'send' && (
+                {/* Asset Selection */}
                 <div className="mb-4">
-                  <p className="text-sm font-medium text-emerald-800 mb-2">Recipient Address</p>
-                  <div className="flex items-center gap-2 p-4 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 rounded-xl">
-                    <input
-                      type="text"
-                      value={recipientAddress}
-                      onChange={(e) => setRecipientAddress(e.target.value)}
-                      placeholder="Enter wallet address"
-                      className="flex-1 bg-transparent outline-none text-sm text-emerald-800"
-                    />
-                    <QrCode className="w-5 h-5 text-emerald-800/40 cursor-pointer" />
-                  </div>
-                </div>
-              )}
-
-              {/* Receive Address (for Receive) */}
-              {showActionModal === 'receive' && (
-                <div className="mb-4">
-                  <p className="text-sm font-medium text-emerald-800 mb-2">Your {selectedAsset.symbol} Address</p>
-                  <div className="p-4 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 rounded-xl">
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-xs text-emerald-800/40 truncate flex-1 mr-2">
-                        {selectedAsset.address}
-                      </p>
+                  <p className="text-sm font-medium text-emerald-800 mb-2">Asset</p>
+                  <div className="flex gap-2">
+                    {cryptoAssets.map((asset) => (
                       <button
-                        onClick={() => copyAddress(selectedAsset.address)}
-                        className="flex items-center gap-1 text-xs text-[#A8E6CF]"
+                        key={asset.id}
+                        onClick={() => setSelectedAsset(asset)}
+                        className={`flex-1 py-3 px-2 rounded-xl border-2 transition-all flex flex-col items-center ${
+                          selectedAsset.id === asset.id
+                            ? 'border-[#0A0A0A] bg-emerald-800/5'
+                            : 'border-transparent bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50'
+                        }`}
                       >
-                        {copiedAddress === selectedAsset.address ? (
-                          <>
-                            <Check className="w-4 h-4" /> Copied
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="w-4 h-4" /> Copy
-                          </>
-                        )}
+                        <span className="text-sm">{asset.symbol}</span>
+                        <span className="text-xs text-emerald-800/40">{asset.balance}</span>
                       </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Amount Input */}
+                <div className="mb-4">
+                  <p className="text-sm font-medium text-emerald-800 mb-2">
+                    {showActionModal === 'send' || showActionModal === 'receive' ? 'Amount' : 'Amount in USD'}
+                  </p>
+                  <div className="flex items-center gap-2 p-4 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 rounded-xl">
+                    <DollarSign className="w-5 h-5 text-emerald-800/40" />
+                    <input
+                      type="number"
+                      value={transferAmount}
+                      onChange={(e) => setTransferAmount(e.target.value)}
+                      placeholder="0.00"
+                      className="flex-1 bg-transparent outline-none text-lg text-emerald-800"
+                    />
+                    <span className="text-sm text-emerald-800/40">
+                      {showActionModal === 'send' || showActionModal === 'receive' ? selectedAsset.symbol : 'USD'}
+                    </span>
+                  </div>
+                  {transferAmount && (
+                    <p className="text-xs text-emerald-800/40 mt-1">
+                      ≈ {selectedAsset.symbol} {(Number(transferAmount) / selectedAsset.price).toFixed(6)}
+                    </p>
+                  )}
+                </div>
+
+                {/* Recipient Address (for Send) */}
+                {showActionModal === 'send' && (
+                  <div className="mb-4">
+                    <p className="text-sm font-medium text-emerald-800 mb-2">Recipient Address</p>
+                    <div className="flex items-center gap-2 p-4 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 rounded-xl">
+                      <input
+                        type="text"
+                        value={recipientAddress}
+                        onChange={(e) => setRecipientAddress(e.target.value)}
+                        placeholder="Enter wallet address"
+                        className="flex-1 bg-transparent outline-none text-sm text-emerald-800"
+                      />
+                      <QrCode className="w-5 h-5 text-emerald-800/40 cursor-pointer" />
                     </div>
-                    <button
-                      onClick={() => setShowQrCode(!showQrCode)}
-                      className="w-full mt-2 p-3 bg-white rounded-xl flex items-center justify-center gap-2"
-                    >
-                      <QrCode className="w-5 h-5 text-emerald-800/60" />
-                      <span className="text-sm text-emerald-800">
-                        {showQrCode ? 'Hide QR Code' : 'Show QR Code'}
-                      </span>
-                    </button>
-                    {showQrCode && (
-                      <div className="mt-3 p-4 bg-white rounded-xl flex justify-center">
-                        <div className="w-32 h-32 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 rounded-xl flex items-center justify-center">
-                          <QrCode className="w-24 h-24 text-emerald-800/20" />
-                        </div>
+                  </div>
+                )}
+
+                {/* Receive Address (for Receive) */}
+                {showActionModal === 'receive' && (
+                  <div className="mb-4">
+                    <p className="text-sm font-medium text-emerald-800 mb-2">Your {selectedAsset.symbol} Address</p>
+                    <div className="p-4 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 rounded-xl">
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="text-xs text-emerald-800/40 truncate flex-1 mr-2">
+                          {selectedAsset.address}
+                        </p>
+                        <button
+                          onClick={() => copyAddress(selectedAsset.address)}
+                          className="flex items-center gap-1 text-xs text-[#A8E6CF]"
+                        >
+                          {copiedAddress === selectedAsset.address ? (
+                            <>
+                              <Check className="w-4 h-4" /> Copied
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-4 h-4" /> Copy
+                            </>
+                          )}
+                        </button>
                       </div>
-                    )}
+                      <button
+                        onClick={() => setShowQrCode(!showQrCode)}
+                        className="w-full mt-2 p-3 bg-white rounded-xl flex items-center justify-center gap-2"
+                      >
+                        <QrCode className="w-5 h-5 text-emerald-800/60" />
+                        <span className="text-sm text-emerald-800">
+                          {showQrCode ? 'Hide QR Code' : 'Show QR Code'}
+                        </span>
+                      </button>
+                      {showQrCode && (
+                        <div className="mt-3 p-4 bg-white rounded-xl flex justify-center">
+                          <div className="w-32 h-32 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 rounded-xl flex items-center justify-center">
+                            <QrCode className="w-24 h-24 text-emerald-800/20" />
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Network Fee */}
-              <GlassCard className="p-4 mb-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-emerald-800/40" />
-                    <span className="text-sm text-emerald-800">Network Fee</span>
+                {/* Network Fee */}
+                <GlassCard className="p-4 mb-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Zap className="w-4 h-4 text-emerald-800/40" />
+                      <span className="text-sm text-emerald-800">Network Fee</span>
+                    </div>
+                    <span className="text-sm font-medium text-emerald-800">
+                      ~$2.50
+                    </span>
                   </div>
-                  <span className="text-sm font-medium text-emerald-800">
-                    ~$2.50
-                  </span>
-                </div>
-              </GlassCard>
+                </GlassCard>
+              </div>
 
-              {/* Action Button */}
-              <div className="flex gap-3">
-                <GlassButton
-                  variant="ghost"
-                  className="flex-1"
-                  onClick={() => setShowActionModal(null)}
-                >
-                  Cancel
-                </GlassButton>
-                <GlassButton
-                  variant="gradient"
-                  className="flex-1"
-                  onClick={() => setShowActionModal(null)}
-                >
-                  {showActionModal === 'deposit' && 'Buy'}
-                  {showActionModal === 'withdraw' && 'Sell'}
-                  {showActionModal === 'send' && 'Send'}
-                  {showActionModal === 'receive' && 'Done'}
-                </GlassButton>
+              {/* Fixed Footer - ALWAYS VISIBLE */}
+              <div
+                className="flex-shrink-0 px-5 py-4 border-t border-emerald-100/50 bg-white"
+                style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 16px), 24px)' }}
+              >
+                <div className="flex gap-3">
+                  <GlassButton
+                    variant="ghost"
+                    className="flex-1"
+                    onClick={() => setShowActionModal(null)}
+                  >
+                    Cancel
+                  </GlassButton>
+                  <GlassButton
+                    variant="gradient"
+                    className="flex-1"
+                    onClick={() => setShowActionModal(null)}
+                  >
+                    {showActionModal === 'deposit' && 'Buy'}
+                    {showActionModal === 'withdraw' && 'Sell'}
+                    {showActionModal === 'send' && 'Send'}
+                    {showActionModal === 'receive' && 'Done'}
+                  </GlassButton>
+                </div>
               </div>
             </motion.div>
           </motion.div>

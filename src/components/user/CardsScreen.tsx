@@ -525,7 +525,7 @@ export default function CardsScreen() {
         </div>
       </GlassCard>
 
-      {/* Add Card Modal */}
+      {/* Add Card Modal - Fixed Footer */}
       <AnimatePresence>
         {showAddCardModal && (
           <motion.div
@@ -540,69 +540,82 @@ export default function CardsScreen() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 25 }}
-              className="w-full bg-white rounded-t-3xl p-5 max-h-[85vh] overflow-y-auto"
+              className="w-full bg-white rounded-t-3xl flex flex-col"
+              style={{ maxHeight: '92vh' }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="w-12 h-1 bg-emerald-200 rounded-full mx-auto mb-4" />
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-emerald-800">Add New Card</h2>
-                <button onClick={() => setShowAddCardModal(false)} className="p-2">
-                  <X className="w-5 h-5 text-emerald-800/40" />
-                </button>
+              {/* Header */}
+              <div className="flex-shrink-0 px-5 pt-4 pb-3 border-b border-emerald-100/50">
+                <div className="w-12 h-1 bg-emerald-200 rounded-full mx-auto mb-4" />
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-bold text-emerald-800">Add New Card</h2>
+                  <button onClick={() => setShowAddCardModal(false)} className="p-2 -mr-2">
+                    <X className="w-5 h-5 text-emerald-800/40" />
+                  </button>
+                </div>
               </div>
 
-              <div className="space-y-6">
-                <div>
-                  <label className="text-sm font-medium text-emerald-800 mb-3 block">Card Type</label>
-                  <div className="grid grid-cols-2 gap-4">
-                    {['debit', 'credit'].map((type) => (
-                      <button
-                        key={type}
-                        className="p-4 rounded-2xl border-2 border-emerald-200 bg-emerald-50 text-center hover:border-emerald-500 transition-colors"
-                      >
-                        <CreditCard className="w-8 h-8 mx-auto mb-2 text-emerald-600" />
-                        <span className="text-sm font-medium text-emerald-800 capitalize">{type} Card</span>
-                      </button>
-                    ))}
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
+                <div className="space-y-6">
+                  <div>
+                    <label className="text-sm font-medium text-emerald-800 mb-3 block">Card Type</label>
+                    <div className="grid grid-cols-2 gap-4">
+                      {['debit', 'credit'].map((type) => (
+                        <button
+                          key={type}
+                          className="p-4 rounded-2xl border-2 border-emerald-200 bg-emerald-50 text-center hover:border-emerald-500 transition-colors"
+                        >
+                          <CreditCard className="w-8 h-8 mx-auto mb-2 text-emerald-600" />
+                          <span className="text-sm font-medium text-emerald-800 capitalize">{type} Card</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-emerald-800 mb-3 block">Card Color</label>
+                    <div className="flex gap-3 justify-center">
+                      {['mint', 'purple', 'gold', 'navy', 'coral'].map((color) => (
+                        <button
+                          key={color}
+                          className={`w-12 h-12 rounded-full bg-gradient-to-br ${
+                            color === 'mint' ? 'from-[#A8E6CF] to-[#88D4AB]' :
+                            color === 'purple' ? 'from-[#DDA0DD] to-[#C48BC4]' :
+                            color === 'gold' ? 'from-[#F4F7C0] to-[#E5EB8A]' :
+                            color === 'navy' ? 'from-[#1a1a2e] to-[#16213e]' :
+                            'from-[#FF6B6B] to-[#EE5A5A]'
+                          } border-4 border-white shadow-lg`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <label className="flex items-center gap-3 p-4 bg-emerald-50 rounded-xl cursor-pointer">
+                    <input type="checkbox" className="w-5 h-5 rounded border-emerald-300" />
+                    <div className="flex items-center gap-2">
+                      <Smartphone className="w-5 h-5 text-emerald-600" />
+                      <span className="text-sm text-emerald-800">Create Virtual Card (Instant)</span>
+                    </div>
+                  </label>
                 </div>
+              </div>
 
-                <div>
-                  <label className="text-sm font-medium text-emerald-800 mb-3 block">Card Color</label>
-                  <div className="flex gap-3 justify-center">
-                    {['mint', 'purple', 'gold', 'navy', 'coral'].map((color) => (
-                      <button
-                        key={color}
-                        className={`w-12 h-12 rounded-full bg-gradient-to-br ${
-                          color === 'mint' ? 'from-[#A8E6CF] to-[#88D4AB]' :
-                          color === 'purple' ? 'from-[#DDA0DD] to-[#C48BC4]' :
-                          color === 'gold' ? 'from-[#F4F7C0] to-[#E5EB8A]' :
-                          color === 'navy' ? 'from-[#1a1a2e] to-[#16213e]' :
-                          'from-[#FF6B6B] to-[#EE5A5A]'
-                        } border-4 border-white shadow-lg`}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                <label className="flex items-center gap-3 p-4 bg-emerald-50 rounded-xl cursor-pointer">
-                  <input type="checkbox" className="w-5 h-5 rounded border-emerald-300" />
-                  <div className="flex items-center gap-2">
-                    <Smartphone className="w-5 h-5 text-emerald-600" />
-                    <span className="text-sm text-emerald-800">Create Virtual Card (Instant)</span>
-                  </div>
-                </label>
-
-                <div className="flex gap-3 pt-4">
+              {/* Fixed Footer - ALWAYS VISIBLE */}
+              <div
+                className="flex-shrink-0 px-5 py-4 border-t border-emerald-100/50 bg-white"
+                style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 16px), 24px)' }}
+              >
+                <div className="flex gap-3">
                   <button
                     onClick={() => setShowAddCardModal(false)}
-                    className="flex-1 py-3 px-4 rounded-xl border border-emerald-200 text-emerald-800 font-medium"
+                    className="flex-1 py-3.5 px-4 rounded-xl border-2 border-emerald-200 text-emerald-800 font-semibold"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={() => { setShowAddCardModal(false); showToast('Card request submitted!', 'success'); }}
-                    className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-medium shadow-lg"
+                    className="flex-1 py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold shadow-lg shadow-emerald-500/30"
                   >
                     Request Card
                   </button>
@@ -613,7 +626,7 @@ export default function CardsScreen() {
         )}
       </AnimatePresence>
 
-      {/* Card Detail Modal */}
+      {/* Card Detail Modal - Fixed Footer */}
       <AnimatePresence>
         {showCardDetail && (() => {
           const card = cards.find(c => c.id === showCardDetail);
@@ -631,74 +644,94 @@ export default function CardsScreen() {
                 animate={{ y: 0 }}
                 exit={{ y: '100%' }}
                 transition={{ type: 'spring', damping: 25 }}
-                className="w-full bg-white rounded-t-3xl p-5 max-h-[90vh] overflow-y-auto"
+                className="w-full bg-white rounded-t-3xl flex flex-col"
+                style={{ maxHeight: '92vh' }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="w-12 h-1 bg-emerald-200 rounded-full mx-auto mb-4" />
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-emerald-800">Card Details</h2>
-                  <button onClick={() => setShowCardDetail(null)} className="p-2">
-                    <X className="w-5 h-5 text-emerald-800/40" />
+                {/* Header */}
+                <div className="flex-shrink-0 px-5 pt-4 pb-3 border-b border-emerald-100/50">
+                  <div className="w-12 h-1 bg-emerald-200 rounded-full mx-auto mb-4" />
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-bold text-emerald-800">Card Details</h2>
+                    <button onClick={() => setShowCardDetail(null)} className="p-2 -mr-2">
+                      <X className="w-5 h-5 text-emerald-800/40" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Scrollable Content */}
+                <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
+                  <div className={`w-full h-48 rounded-2xl bg-gradient-to-br ${getCardGradient(card)} p-5 mb-6 shadow-xl`}>
+                    <div className="flex justify-between items-start mb-8">
+                      <span className="text-white/80 text-xs uppercase tracking-wider font-medium">{card.cardNetwork}</span>
+                      <span className="text-white font-bold">OrbitPay</span>
+                    </div>
+                    <p className="text-white text-2xl font-mono tracking-wider mb-4">•••• •••• •••• {card.lastFourDigits}</p>
+                    <div className="flex justify-between">
+                      <div>
+                        <p className="text-white/60 text-xs">Card Holder</p>
+                        <p className="text-white text-sm font-semibold">{card.name}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-white/60 text-xs">Expires</p>
+                        <p className="text-white text-sm font-semibold">{String(card.expiryMonth).padStart(2, '0')}/{card.expiryYear}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="p-4 bg-emerald-50 rounded-xl">
+                        <p className="text-xs text-emerald-800/60 mb-1">Daily Limit</p>
+                        <p className="text-lg font-bold text-emerald-800">${card.dailyLimit.toLocaleString()}</p>
+                      </div>
+                      <div className="p-4 bg-emerald-50 rounded-xl">
+                        <p className="text-xs text-emerald-800/60 mb-1">Monthly Limit</p>
+                        <p className="text-lg font-bold text-emerald-800">${card.monthlyLimit.toLocaleString()}</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <button
+                        onClick={() => handleFreeze(card.id)}
+                        className={`w-full flex items-center justify-between p-4 rounded-xl ${
+                          card.status === 'frozen' ? 'bg-emerald-100' : 'bg-slate-100'
+                        }`}
+                      >
+                        <span className="text-sm font-medium text-emerald-800">
+                          {card.status === 'frozen' ? 'Unfreeze Card' : 'Freeze Card'}
+                        </span>
+                        {card.status === 'frozen' ? <Sparkles className="w-5 h-5 text-emerald-600" /> : <Snowflake className="w-5 h-5 text-emerald-600" />}
+                      </button>
+                      <button
+                        onClick={() => copyCardInfo(`•••• •••• •••• ${card.lastFourDigits}`)}
+                        className="w-full flex items-center justify-between p-4 rounded-xl bg-slate-100"
+                      >
+                        <span className="text-sm font-medium text-emerald-800">Copy Card Number</span>
+                        <Copy className="w-5 h-5 text-emerald-600" />
+                      </button>
+                      <button
+                        onClick={() => setShowLimitsModal(card.id)}
+                        className="w-full flex items-center justify-between p-4 rounded-xl bg-slate-100"
+                      >
+                        <span className="text-sm font-medium text-emerald-800">Manage Limits</span>
+                        <ChevronRight className="w-5 h-5 text-emerald-600" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Fixed Footer - Close Button */}
+                <div
+                  className="flex-shrink-0 px-5 py-4 border-t border-emerald-100/50 bg-white"
+                  style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 16px), 24px)' }}
+                >
+                  <button
+                    onClick={() => setShowCardDetail(null)}
+                    className="w-full py-3.5 rounded-xl border-2 border-emerald-200 text-emerald-800 font-semibold"
+                  >
+                    Close
                   </button>
-                </div>
-
-                <div className={`w-full h-48 rounded-2xl bg-gradient-to-br ${getCardGradient(card)} p-5 mb-6 shadow-xl`}>
-                  <div className="flex justify-between items-start mb-8">
-                    <span className="text-white/80 text-xs uppercase tracking-wider font-medium">{card.cardNetwork}</span>
-                    <span className="text-white font-bold">OrbitPay</span>
-                  </div>
-                  <p className="text-white text-2xl font-mono tracking-wider mb-4">•••• •••• •••• {card.lastFourDigits}</p>
-                  <div className="flex justify-between">
-                    <div>
-                      <p className="text-white/60 text-xs">Card Holder</p>
-                      <p className="text-white text-sm font-semibold">{card.name}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-white/60 text-xs">Expires</p>
-                      <p className="text-white text-sm font-semibold">{String(card.expiryMonth).padStart(2, '0')}/{card.expiryYear}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 bg-emerald-50 rounded-xl">
-                      <p className="text-xs text-emerald-800/60 mb-1">Daily Limit</p>
-                      <p className="text-lg font-bold text-emerald-800">${card.dailyLimit.toLocaleString()}</p>
-                    </div>
-                    <div className="p-4 bg-emerald-50 rounded-xl">
-                      <p className="text-xs text-emerald-800/60 mb-1">Monthly Limit</p>
-                      <p className="text-lg font-bold text-emerald-800">${card.monthlyLimit.toLocaleString()}</p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <button
-                      onClick={() => handleFreeze(card.id)}
-                      className={`w-full flex items-center justify-between p-4 rounded-xl ${
-                        card.status === 'frozen' ? 'bg-emerald-100' : 'bg-slate-100'
-                      }`}
-                    >
-                      <span className="text-sm font-medium text-emerald-800">
-                        {card.status === 'frozen' ? 'Unfreeze Card' : 'Freeze Card'}
-                      </span>
-                      {card.status === 'frozen' ? <Sparkles className="w-5 h-5 text-emerald-600" /> : <Snowflake className="w-5 h-5 text-emerald-600" />}
-                    </button>
-                    <button
-                      onClick={() => copyCardInfo(`•••• •••• •••• ${card.lastFourDigits}`)}
-                      className="w-full flex items-center justify-between p-4 rounded-xl bg-slate-100"
-                    >
-                      <span className="text-sm font-medium text-emerald-800">Copy Card Number</span>
-                      <Copy className="w-5 h-5 text-emerald-600" />
-                    </button>
-                    <button
-                      onClick={() => setShowLimitsModal(card.id)}
-                      className="w-full flex items-center justify-between p-4 rounded-xl bg-slate-100"
-                    >
-                      <span className="text-sm font-medium text-emerald-800">Manage Limits</span>
-                      <ChevronRight className="w-5 h-5 text-emerald-600" />
-                    </button>
-                  </div>
                 </div>
               </motion.div>
             </motion.div>
@@ -706,7 +739,7 @@ export default function CardsScreen() {
         })()}
       </AnimatePresence>
 
-      {/* Limits Modal */}
+      {/* Limits Modal - Fixed Footer */}
       <AnimatePresence>
         {showLimitsModal && (() => {
           const card = cards.find(c => c.id === showLimitsModal);
@@ -724,61 +757,74 @@ export default function CardsScreen() {
                 animate={{ y: 0 }}
                 exit={{ y: '100%' }}
                 transition={{ type: 'spring', damping: 25 }}
-                className="w-full bg-white rounded-t-3xl p-5"
+                className="w-full bg-white rounded-t-3xl flex flex-col"
+                style={{ maxHeight: '92vh' }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="w-12 h-1 bg-emerald-200 rounded-full mx-auto mb-4" />
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-emerald-800">Spending Limits</h2>
-                  <button onClick={() => setShowLimitsModal(null)} className="p-2">
-                    <X className="w-5 h-5 text-emerald-800/40" />
-                  </button>
-                </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between mb-2">
-                      <label className="text-sm font-medium text-emerald-800">Daily Limit</label>
-                      <span className="text-sm font-bold text-emerald-600">${card.dailyLimit.toLocaleString()}</span>
-                    </div>
-                    <input
-                      type="range"
-                      min="100"
-                      max="10000"
-                      step="100"
-                      defaultValue={card.dailyLimit}
-                      className="w-full h-2 bg-emerald-100 rounded-lg appearance-none cursor-pointer"
-                    />
-                  </div>
-                  <div>
-                    <div className="flex justify-between mb-2">
-                      <label className="text-sm font-medium text-emerald-800">Monthly Limit</label>
-                      <span className="text-sm font-bold text-emerald-600">${card.monthlyLimit.toLocaleString()}</span>
-                    </div>
-                    <input
-                      type="range"
-                      min="1000"
-                      max="100000"
-                      step="500"
-                      defaultValue={card.monthlyLimit}
-                      className="w-full h-2 bg-emerald-100 rounded-lg appearance-none cursor-pointer"
-                    />
+                {/* Header */}
+                <div className="flex-shrink-0 px-5 pt-4 pb-3 border-b border-emerald-100/50">
+                  <div className="w-12 h-1 bg-emerald-200 rounded-full mx-auto mb-4" />
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-bold text-emerald-800">Spending Limits</h2>
+                    <button onClick={() => setShowLimitsModal(null)} className="p-2 -mr-2">
+                      <X className="w-5 h-5 text-emerald-800/40" />
+                    </button>
                   </div>
                 </div>
 
-                <div className="flex gap-3 mt-6">
-                  <button
-                    onClick={() => setShowLimitsModal(null)}
-                    className="flex-1 py-3 px-4 rounded-xl border border-emerald-200 text-emerald-800 font-medium"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={() => { setShowLimitsModal(null); showToast('Limits updated successfully', 'success'); }}
-                    className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-medium shadow-lg"
-                  >
-                    Save Changes
-                  </button>
+                {/* Scrollable Content */}
+                <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
+                  <div className="space-y-6">
+                    <div>
+                      <div className="flex justify-between mb-2">
+                        <label className="text-sm font-medium text-emerald-800">Daily Limit</label>
+                        <span className="text-sm font-bold text-emerald-600">${card.dailyLimit.toLocaleString()}</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="100"
+                        max="10000"
+                        step="100"
+                        defaultValue={card.dailyLimit}
+                        className="w-full h-2 bg-emerald-100 rounded-lg appearance-none cursor-pointer"
+                      />
+                    </div>
+                    <div>
+                      <div className="flex justify-between mb-2">
+                        <label className="text-sm font-medium text-emerald-800">Monthly Limit</label>
+                        <span className="text-sm font-bold text-emerald-600">${card.monthlyLimit.toLocaleString()}</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="1000"
+                        max="100000"
+                        step="500"
+                        defaultValue={card.monthlyLimit}
+                        className="w-full h-2 bg-emerald-100 rounded-lg appearance-none cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Fixed Footer - ALWAYS VISIBLE */}
+                <div
+                  className="flex-shrink-0 px-5 py-4 border-t border-emerald-100/50 bg-white"
+                  style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 16px), 24px)' }}
+                >
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setShowLimitsModal(null)}
+                      className="flex-1 py-3.5 px-4 rounded-xl border-2 border-emerald-200 text-emerald-800 font-semibold"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => { setShowLimitsModal(null); showToast('Limits updated successfully', 'success'); }}
+                      className="flex-1 py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold shadow-lg shadow-emerald-500/30"
+                    >
+                      Save Changes
+                    </button>
+                  </div>
                 </div>
               </motion.div>
             </motion.div>

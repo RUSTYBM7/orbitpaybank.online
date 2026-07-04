@@ -473,61 +473,74 @@ export default function SupportScreen() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 25 }}
-              className="w-full bg-white rounded-t-3xl p-5 max-h-[85vh] overflow-y-auto"
+              className="w-full bg-white rounded-t-3xl flex flex-col"
+              style={{ maxHeight: '92vh' }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="w-12 h-1 bg-[#0A0A0A]/20 rounded-full mx-auto mb-4" />
-              <h2 className="text-xl font-bold text-[#0A0A0A] mb-6">Create Support Ticket</h2>
+              {/* Header */}
+              <div className="flex-shrink-0 px-5 pt-4 pb-3 border-b border-gray-100">
+                <div className="w-12 h-1 bg-[#0A0A0A]/20 rounded-full mx-auto mb-4" />
+                <h2 className="text-xl font-bold text-[#0A0A0A]">Create Support Ticket</h2>
+              </div>
 
-              <div className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium text-[#0A0A0A] mb-2 block">Subject</label>
-                  <input
-                    type="text"
-                    value={ticketForm.subject}
-                    onChange={(e) => setTicketForm({ ...ticketForm, subject: e.target.value })}
-                    placeholder="Brief description of your issue"
-                    className="w-full px-4 py-3 bg-[#F7F9F4] rounded-xl text-sm outline-none"
-                  />
-                </div>
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium text-[#0A0A0A] mb-2 block">Subject</label>
+                    <input
+                      type="text"
+                      value={ticketForm.subject}
+                      onChange={(e) => setTicketForm({ ...ticketForm, subject: e.target.value })}
+                      placeholder="Brief description of your issue"
+                      className="w-full px-4 py-3 bg-[#F7F9F4] rounded-xl text-sm outline-none"
+                    />
+                  </div>
 
-                <div>
-                  <label className="text-sm font-medium text-[#0A0A0A] mb-2 block">Priority</label>
-                  <div className="flex gap-2">
-                    {(['low', 'medium', 'high', 'urgent'] as const).map((p) => (
-                      <button
-                        key={p}
-                        onClick={() => setTicketForm({ ...ticketForm, priority: p })}
-                        className={`flex-1 py-2 px-3 rounded-xl text-xs font-medium transition-all ${
-                          ticketForm.priority === p
-                            ? 'bg-[#0A0A0A] text-white'
-                            : 'bg-[#F7F9F4] text-[#0A0A0A]/60'
-                        }`}
-                      >
-                        {p.charAt(0).toUpperCase() + p.slice(1)}
-                      </button>
-                    ))}
+                  <div>
+                    <label className="text-sm font-medium text-[#0A0A0A] mb-2 block">Priority</label>
+                    <div className="flex gap-2">
+                      {(['low', 'medium', 'high', 'urgent'] as const).map((p) => (
+                        <button
+                          key={p}
+                          onClick={() => setTicketForm({ ...ticketForm, priority: p })}
+                          className={`flex-1 py-2 px-3 rounded-xl text-xs font-medium transition-all ${
+                            ticketForm.priority === p
+                              ? 'bg-[#0A0A0A] text-white'
+                              : 'bg-[#F7F9F4] text-[#0A0A0A]/60'
+                          }`}
+                        >
+                          {p.charAt(0).toUpperCase() + p.slice(1)}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-[#0A0A0A] mb-2 block">Message</label>
+                    <textarea
+                      value={ticketForm.message}
+                      onChange={(e) => setTicketForm({ ...ticketForm, message: e.target.value })}
+                      placeholder="Describe your issue in detail..."
+                      rows={4}
+                      className="w-full px-4 py-3 bg-[#F7F9F4] rounded-xl text-sm outline-none resize-none"
+                    />
                   </div>
                 </div>
+              </div>
 
-                <div>
-                  <label className="text-sm font-medium text-[#0A0A0A] mb-2 block">Message</label>
-                  <textarea
-                    value={ticketForm.message}
-                    onChange={(e) => setTicketForm({ ...ticketForm, message: e.target.value })}
-                    placeholder="Describe your issue in detail..."
-                    rows={4}
-                    className="w-full px-4 py-3 bg-[#F7F9F4] rounded-xl text-sm outline-none resize-none"
-                  />
-                </div>
-
-                <div className="flex gap-3 pt-2">
-                  <GlassButton variant="ghost" fullWidth onClick={() => setShowTicketForm(false)}>
+              {/* Fixed Footer - ALWAYS VISIBLE */}
+              <div
+                className="flex-shrink-0 px-5 py-4 border-t border-gray-100 bg-white"
+                style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 16px), 24px)' }}
+              >
+                <div className="flex gap-3">
+                  <GlassButton variant="ghost" className="flex-1" onClick={() => setShowTicketForm(false)}>
                     Cancel
                   </GlassButton>
                   <GlassButton
                     variant="gradient"
-                    fullWidth
+                    className="flex-1"
                     onClick={submitTicket}
                     disabled={!ticketForm.subject || !ticketForm.message}
                   >

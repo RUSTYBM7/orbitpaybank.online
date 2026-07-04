@@ -236,71 +236,84 @@ export default function LoansScreen() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 25 }}
-              className="w-full bg-white rounded-t-3xl p-5 max-h-[85vh] overflow-y-auto"
+              className="w-full bg-white rounded-t-3xl flex flex-col"
+              style={{ maxHeight: '92vh' }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="w-12 h-1 bg-[#0A0A0A]/20 rounded-full mx-auto mb-4" />
-              <h2 className="text-xl font-bold text-[#0A0A0A] mb-4">Apply for a Loan</h2>
+              {/* Header */}
+              <div className="flex-shrink-0 px-5 pt-4 pb-3 border-b border-gray-100">
+                <div className="w-12 h-1 bg-[#0A0A0A]/20 rounded-full mx-auto mb-4" />
+                <h2 className="text-xl font-bold text-[#0A0A0A]">Apply for a Loan</h2>
+              </div>
 
-              <div className="space-y-3">
-                {loanTypes.map((type) => (
-                  <motion.button
-                    key={type.id}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => setSelectedLoanType(type.id)}
-                    className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
-                      selectedLoanType === type.id
-                        ? 'border-[#A8E6CF] bg-[#A8E6CF]/10'
-                        : 'border-[#0A0A0A]/10'
-                    }`}
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
+                <div className="space-y-3">
+                  {loanTypes.map((type) => (
+                    <motion.button
+                      key={type.id}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setSelectedLoanType(type.id)}
+                      className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
+                        selectedLoanType === type.id
+                          ? 'border-[#A8E6CF] bg-[#A8E6CF]/10'
+                          : 'border-[#0A0A0A]/10'
+                      }`}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-[#0A0A0A] flex items-center justify-center">
+                          <type.icon className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-medium text-[#0A0A0A]">{type.name}</h3>
+                          <p className="text-xs text-[#0A0A0A]/50">{type.desc}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-medium text-[#2ECC71]">{type.rate}</p>
+                          <p className="text-xs text-[#0A0A0A]/50">Max {type.max}</p>
+                        </div>
+                      </div>
+                    </motion.button>
+                  ))}
+                </div>
+
+                <div className="mt-6 space-y-4">
+                  <GlassInput
+                    label="Loan Amount"
+                    type="number"
+                    placeholder="Enter amount"
+                    prefix="$"
+                  />
+                  <GlassInput
+                    label="Loan Term"
+                    type="number"
+                    placeholder="Enter months"
+                    suffix="months"
+                  />
+                </div>
+              </div>
+
+              {/* Fixed Footer - ALWAYS VISIBLE */}
+              <div
+                className="flex-shrink-0 px-5 py-4 border-t border-gray-100 bg-white"
+                style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 16px), 24px)' }}
+              >
+                <div className="flex gap-3">
+                  <GlassButton
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => setShowApplyModal(false)}
                   >
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-[#0A0A0A] flex items-center justify-center">
-                        <type.icon className="w-6 h-6 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-medium text-[#0A0A0A]">{type.name}</h3>
-                        <p className="text-xs text-[#0A0A0A]/50">{type.desc}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-medium text-[#2ECC71]">{type.rate}</p>
-                        <p className="text-xs text-[#0A0A0A]/50">Max {type.max}</p>
-                      </div>
-                    </div>
-                  </motion.button>
-                ))}
-              </div>
-
-              <div className="mt-6 space-y-4">
-                <GlassInput
-                  label="Loan Amount"
-                  type="number"
-                  placeholder="Enter amount"
-                  prefix="$"
-                />
-                <GlassInput
-                  label="Loan Term"
-                  type="number"
-                  placeholder="Enter months"
-                  suffix="months"
-                />
-              </div>
-
-              <div className="mt-6 flex gap-3">
-                <GlassButton
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() => setShowApplyModal(false)}
-                >
-                  Cancel
-                </GlassButton>
-                <GlassButton className="flex-1" onClick={() => {}}>
-                  Apply Now
-                </GlassButton>
+                    Cancel
+                  </GlassButton>
+                  <GlassButton className="flex-1" onClick={() => {}}>
+                    Apply Now
+                  </GlassButton>
+                </div>
               </div>
             </motion.div>
           </motion.div>
-        )}
+)}
       </AnimatePresence>
     </div>
   );
