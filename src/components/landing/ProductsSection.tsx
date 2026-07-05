@@ -107,8 +107,8 @@ const ProductsSection = () => {
               </div>
               <div className="relative h-64 md:h-auto">
                 <img
-                  src="/assets/images/lobby-interior.jpg"
-                  alt="OrbitPay Branch Interior"
+                  src="/assets/images/mobile-app-preview.jpg"
+                  alt="OrbitPay Mobile Banking App"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent to-emerald-50/90 md:block hidden" />

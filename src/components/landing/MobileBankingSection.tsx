@@ -75,36 +75,23 @@ const MobileBankingSection = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative flex justify-center"
           >
+            {/* Mobile App Preview Images */}
             <div className="relative">
               <div className="absolute -inset-4 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-[3rem] blur-2xl opacity-20" />
-              <div className="relative glass-card p-4 rounded-[2.5rem]">
-                <div className="bg-gray-900 rounded-[2rem] overflow-hidden w-64">
-                  <div className="bg-emerald-500 p-4 text-white">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-sm font-medium">OrbitPay</span>
-                      <Bell className="w-5 h-5" />
-                    </div>
-                    <div className="text-2xl font-bold">$45,892.50</div>
-                    <div className="text-sm opacity-80">Available Balance</div>
-                  </div>
-                  <div className="p-4 space-y-3">
-                    <div className="flex items-center gap-3 p-3 bg-gray-800 rounded-xl">
-                      <div className="w-10 h-10 rounded-full bg-emerald-500" />
-                      <div>
-                        <div className="text-white text-sm font-medium">Sent to John</div>
-                        <div className="text-gray-400 text-xs">$250.00</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 bg-gray-800 rounded-xl">
-                      <div className="w-10 h-10 rounded-full bg-teal-500" />
-                      <div>
-                        <div className="text-white text-sm font-medium">Received from Sarah</div>
-                        <div className="text-gray-400 text-xs">$500.00</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+
+              {/* Featured App Preview Image */}
+              <img
+                src="/assets/images/mobile-app-preview.jpg"
+                alt="OrbitPay Mobile Banking App Preview"
+                className="rounded-3xl shadow-2xl shadow-emerald-500/30 max-w-md w-full"
+              />
+
+              {/* Secondary Mobile Landing Image */}
+              <img
+                src="/assets/images/mobile-landing-1.jpg"
+                alt="OrbitPay Vision Mobile Experience"
+                className="absolute -bottom-8 -right-8 rounded-2xl shadow-xl shadow-emerald-500/20 w-48 hidden lg:block"
+              />
             </div>
           </motion.div>
         </div>

@@ -55,6 +55,14 @@ const FooterSection = () => {
             <div className="mb-6">
               <BrandLogo variant="footer" className="max-w-[180px]" />
             </div>
+
+            {/* Featured Poster Banner */}
+            <img
+              src="/assets/images/poster-banner.jpg"
+              alt="OrbitPay Finance - Banking Without Borders"
+              className="rounded-xl shadow-lg mb-6 w-full max-w-xs"
+            />
+
             <p className="text-gray-400 mb-6 max-w-sm">
               Your trusted credit union partner for over 75 years. Building stronger
               communities through better banking.

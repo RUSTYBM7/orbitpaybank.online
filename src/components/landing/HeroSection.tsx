@@ -90,11 +90,20 @@ const HeroSection = () => {
           {/* Subheadline */}
           <motion.p
             variants={itemVariants}
-            className="text-lg sm:text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed"
+            className="text-lg sm:text-xl md:text-2xl text-gray-600 mb-6 max-w-3xl mx-auto leading-relaxed"
           >
             Welcome to OrbitPay Credit Union — where financial innovation meets community values.
             Experience banking designed for the way you live.
           </motion.p>
+
+          {/* Featured Corporate Banner */}
+          <motion.div variants={itemVariants} className="mb-8">
+            <img
+              src="/assets/images/corporate-banner.jpg"
+              alt="OrbitPay Finance - Banking Without Borders"
+              className="mx-auto rounded-2xl shadow-2xl shadow-emerald-500/20 max-w-3xl w-full"
+            />
+          </motion.div>
 
           {/* CTA Buttons */}
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
