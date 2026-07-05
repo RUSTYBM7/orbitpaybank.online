@@ -1,158 +1,229 @@
-import { useState, useMemo, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Search, Plus, Wallet, CheckCircle, XCircle, Clock, Eye, AlertCircle, Check, Download, RefreshCw, Loader2 } from 'lucide-react';
-import { useAdminStore } from '@/store/adminStore';
-import type { Loan } from '@/store/adminStore';
-import { Button, Badge, Modal, Select, Table, ProgressBar } from '@/components/ui';
-
-const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.05 } } };
-const itemVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } };
+import { useEffect, useState } from 'react';
+import { Briefcase, Plus, Search, CheckCircle, XCircle, DollarSign, Calendar, AlertCircle, TrendingDown, FileText } from 'lucide-react';
+import * as api from '@/lib/api';
 
 export default function Loans() {
-  const { loans, approveLoan, rejectLoan, fetchLoans, isLoading } = useAdminStore();
+  const [loans, setLoans] = useState<any[]>([]);
+  const [search, setSearch] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [createOpen, setCreateOpen] = useState(false);
+  const [members, setMembers] = useState<any[]>([]);
+  const [form, setForm] = useState({ memberId: '', principal: 10000, termMonths: 12, rate: 8.5, type: 'personal', collateral: '' });
 
   useEffect(() => {
-    fetchLoans();
-  }, [fetchLoans]);
+    api.loansApi.getAll().then((r: any) => setLoans(r.data || []));
+    api.membersApi.getAll().then((r: any) => setMembers((r.data || []).slice(0, 100)));
+  }, []);
 
-  const [search, setSearch] = useState('');
-  const [typeFilter, setTypeFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [showViewModal, setShowViewModal] = useState(false);
-  const [selectedLoan, setSelectedLoan] = useState<Loan | null>(null);
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const filtered = loans.filter(l =>
+    (filterStatus === 'all' || l.status === filterStatus) &&
+    (!search || l.memberName?.toLowerCase().includes(search.toLowerCase()))
+  );
 
-  const filteredLoans = useMemo(() => {
-    return loans.filter(l => {
-      const matchesSearch = l.memberName.toLowerCase().includes(search.toLowerCase()) || l.id.toLowerCase().includes(search.toLowerCase());
-      const matchesType = typeFilter === 'all' || l.type === typeFilter;
-      const matchesStatus = statusFilter === 'all' || l.status === statusFilter;
-      return matchesSearch && matchesType && matchesStatus;
-    });
-  }, [loans, search, typeFilter, statusFilter]);
+  const totalPortfolio = loans.reduce((s, l) => s + (l.outstandingBalance || l.amount || 0), 0);
+  const activeValue = loans.filter(l => l.status === 'active').reduce((s, l) => s + (l.outstandingBalance || 0), 0);
+  const delinquentValue = loans.filter(l => l.status === 'delinquent').reduce((s, l) => s + (l.outstandingBalance || 0), 0);
 
-  const showToast = (message: string, type: 'success' | 'error') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
+  const approve = async (id: string) => {
+    await api.loansApi.updateStatus(id, 'active');
+    setLoans(loans.map(l => l.id === id ? { ...l, status: 'active' } : l));
+  };
+  const reject = async (id: string) => {
+    await api.loansApi.updateStatus(id, 'rejected');
+    setLoans(loans.map(l => l.id === id ? { ...l, status: 'rejected' } : l));
+  };
+  const disburse = async (id: string) => await api.loansApi.disburse(id);
+  const restructure = async (id: string) => await api.loansApi.restructure(id);
+  const flag = async (id: string) => await api.loansApi.sendToCollections(id);
+
+  const create = async () => {
+    const res: any = await api.loansApi.apply({ ...form, member: members.find((m: any) => m.id === form.memberId) });
+    if (res.success) {
+      setLoans([res.data, ...loans]);
+      setCreateOpen(false);
+    }
   };
 
-  const handleApprove = (l: Loan) => { approveLoan(l.id); showToast(`Loan ${l.id} has been approved`, 'success'); };
-  const handleReject = (l: Loan) => { rejectLoan(l.id); showToast(`Loan ${l.id} has been rejected`, 'success'); };
-
-  const stats = {
-    total: loans.length,
-    active: loans.filter(l => l.status === 'active').length,
-    pending: loans.filter(l => l.status === 'pending').length,
-    portfolio: loans.filter(l => l.status === 'active').reduce((sum, l) => sum + l.balance, 0),
-    defaulted: loans.filter(l => l.status === 'defaulted').length,
-  };
-
-  const columns = [
-    { key: 'id', header: 'Loan ID', render: (l: Loan) => <span className="text-slate-400 font-mono text-sm">{l.id}</span> },
-    { key: 'member', header: 'Member', render: (l: Loan) => <span className="text-white font-medium">{l.memberName}</span> },
-    { key: 'type', header: 'Type', render: (l: Loan) => <Badge variant="info">{l.type}</Badge> },
-    { key: 'amount', header: 'Original', render: (l: Loan) => <span className="text-white">${l.amount.toLocaleString()}</span> },
-    { key: 'balance', header: 'Balance', render: (l: Loan) => <span className="text-white font-medium">${l.balance.toLocaleString()}</span> },
-    { key: 'rate', header: 'Rate', render: (l: Loan) => <span className="text-slate-400">{l.rate}%</span> },
-    { key: 'progress', header: 'Progress', render: (l: Loan) => (
-      <div className="w-24"><ProgressBar value={l.progress} showLabel color={l.progress > 50 ? 'emerald' : 'amber'} /></div>
-    )},
-    { key: 'status', header: 'Status', render: (l: Loan) => (
-      <Badge variant={l.status === 'active' ? 'success' : l.status === 'pending' ? 'warning' : l.status === 'defaulted' ? 'danger' : 'default'}>{l.status}</Badge>
-    )},
-    { key: 'actions', header: 'Actions', render: (l: Loan) => (
-      <div className="flex items-center gap-2">
-        <button onClick={() => { setSelectedLoan(l); setShowViewModal(true); }} className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg"><Eye className="w-4 h-4" /></button>
-        {l.status === 'pending' && (
-          <>
-            <button onClick={() => handleApprove(l)} className="p-1.5 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 rounded-lg" title="Approve"><CheckCircle className="w-4 h-4" /></button>
-            <button onClick={() => handleReject(l)} className="p-1.5 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg" title="Reject"><XCircle className="w-4 h-4" /></button>
-          </>
-        )}
-      </div>
-    )}
-  ];
+  const statusColor = (s: string) => ({
+    pending: 'bg-amber-500/20 text-amber-300',
+    approved: 'bg-blue-500/20 text-blue-300',
+    active: 'bg-emerald-500/20 text-emerald-300',
+    delinquent: 'bg-orange-500/20 text-orange-300',
+    default: 'bg-red-500/20 text-red-300',
+    paid_off: 'bg-purple-500/20 text-purple-300',
+    rejected: 'bg-slate-700 text-slate-300',
+  }[s] || 'bg-slate-700 text-slate-300');
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible" className="p-6 space-y-6">
-      {toast && (
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-4 py-3 rounded-xl border ${toast.type === 'success' ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' : 'bg-red-500/20 border-red-500/50 text-red-400'}`}>
-          {toast.type === 'success' ? <CheckCircle className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
-          <span className="text-sm font-medium">{toast.message}</span>
-        </motion.div>
-      )}
-
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
-        <div><h1 className="text-2xl font-bold text-white">Loans</h1><p className="text-slate-400 text-sm mt-1">Manage loan portfolio and applications</p></div>
-        <div className="flex items-center gap-3">
-          <Button variant="secondary" icon={<Download className="w-4 h-4" />}>Export</Button>
-          <Button variant="primary" icon={<Plus className="w-4 h-4" />}>New Loan</Button>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-white">Loans</h1>
+          <p className="text-slate-400 mt-1">Apply, approve, disburse, restructure, collections</p>
         </div>
-      </motion.div>
+        <button onClick={() => setCreateOpen(true)}
+          className="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg flex items-center gap-2">
+          <Plus className="w-4 h-4" /> New Loan Application
+        </button>
+      </div>
 
-      <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        {[
-          { label: 'Loan Portfolio', value: `$${(stats.portfolio / 1000000).toFixed(1)}M`, color: 'emerald' },
-          { label: 'Active Loans', value: stats.active, color: 'emerald' },
-          { label: 'Pending Approval', value: stats.pending, color: 'amber' },
-          { label: 'Defaulted', value: stats.defaulted, color: 'red' },
-          { label: 'Total Loans', value: stats.total, color: 'blue' },
-        ].map((s, i) => (
-          <div key={i} className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-            <p className="text-slate-500 text-sm">{s.label}</p><p className="text-2xl font-bold text-white mt-1">{s.value}</p>
-          </div>
-        ))}
-      </motion.div>
-
-      <motion.div variants={itemVariants} className="flex items-center gap-4 flex-wrap">
-        <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-          <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search loans..." className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500/50" />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-4">
+          <p className="text-xs text-slate-400 uppercase">Total Portfolio</p>
+          <p className="text-2xl font-bold text-white mt-1">${(totalPortfolio / 1e6).toFixed(2)}M</p>
         </div>
-        <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className="px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-slate-300">
-          <option value="all">All Types</option><option value="personal">Personal</option><option value="home">Home</option><option value="auto">Auto</option><option value="business">Business</option><option value="student">Student</option>
-        </select>
-        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-slate-300">
-          <option value="all">All Status</option><option value="active">Active</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="defaulted">Defaulted</option><option value="paid_off">Paid Off</option>
-        </select>
-      </motion.div>
+        <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-4">
+          <p className="text-xs text-slate-400 uppercase">Active</p>
+          <p className="text-2xl font-bold text-emerald-400 mt-1">${(activeValue / 1e6).toFixed(2)}M</p>
+        </div>
+        <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-4">
+          <p className="text-xs text-slate-400 uppercase">Delinquent</p>
+          <p className="text-2xl font-bold text-orange-400 mt-1">${(delinquentValue / 1e6).toFixed(2)}M</p>
+        </div>
+        <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-4">
+          <p className="text-xs text-slate-400 uppercase">Default</p>
+          <p className="text-2xl font-bold text-red-400 mt-1">${((totalPortfolio - activeValue - delinquentValue) / 1e6).toFixed(2)}M</p>
+        </div>
+      </div>
 
-      <motion.div variants={itemVariants} className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-        <Table columns={columns} data={filteredLoans} keyExtractor={l => l.id} emptyMessage="No loans found" />
-      </motion.div>
+      <div className="bg-slate-800/50 border border-slate-700 rounded-2xl p-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by member..."
+            className="w-full pl-10 pr-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg text-white text-sm" />
+        </div>
+        <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}
+          className="px-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg text-white text-sm">
+          <option value="all">All status</option>
+          {['pending', 'approved', 'active', 'delinquent', 'default', 'paid_off', 'rejected'].map(s => (
+            <option key={s} value={s}>{s}</option>
+          ))}
+        </select>
+      </div>
 
-      <Modal isOpen={showViewModal} onClose={() => setShowViewModal(false)} title="Loan Details" size="lg">
-        {selectedLoan && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between p-4 bg-slate-800/50 rounded-xl">
+      <div className="bg-slate-800/50 border border-slate-700 rounded-2xl overflow-hidden">
+        <table className="w-full">
+          <thead className="bg-slate-900/30 text-slate-400 text-sm">
+            <tr>
+              <th className="text-left py-3 px-4">Loan ID</th>
+              <th className="text-left py-3 px-4">Member</th>
+              <th className="text-left py-3 px-4">Type</th>
+              <th className="text-right py-3 px-4">Principal</th>
+              <th className="text-right py-3 px-4">Outstanding</th>
+              <th className="text-right py-3 px-4">Rate</th>
+              <th className="text-left py-3 px-4">Next Payment</th>
+              <th className="text-left py-3 px-4">Status</th>
+              <th className="text-right py-3 px-4">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.slice(0, 50).map(l => (
+              <tr key={l.id} className="border-t border-slate-700/50 hover:bg-slate-700/20">
+                <td className="py-3 px-4 text-white font-mono text-xs">{l.id?.slice(0, 10)}...</td>
+                <td className="py-3 px-4 text-slate-200 text-sm">{l.memberName}</td>
+                <td className="py-3 px-4 text-slate-300 text-sm capitalize">{l.loanType || l.type}</td>
+                <td className="py-3 px-4 text-right text-white">${(l.principal || l.amount || 0).toLocaleString()}</td>
+                <td className="py-3 px-4 text-right text-slate-300">${(l.outstandingBalance || 0).toLocaleString()}</td>
+                <td className="py-3 px-4 text-right text-slate-300">{l.interestRate}%</td>
+                <td className="py-3 px-4 text-slate-400 text-sm">{l.nextPaymentDate ? new Date(l.nextPaymentDate).toLocaleDateString() : '—'}</td>
+                <td className="py-3 px-4"><span className={`px-2 py-0.5 text-xs rounded-full ${statusColor(l.status)}`}>{l.status}</span></td>
+                <td className="py-3 px-4 text-right">
+                  <div className="flex gap-1 justify-end">
+                    {l.status === 'pending' && (
+                      <>
+                        <button onClick={() => approve(l.id)} className="p-1.5 text-emerald-400 hover:bg-slate-700 rounded">
+                          <CheckCircle className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => reject(l.id)} className="p-1.5 text-red-400 hover:bg-slate-700 rounded">
+                          <XCircle className="w-4 h-4" />
+                        </button>
+                      </>
+                    )}
+                    {l.status === 'approved' && (
+                      <button onClick={() => disburse(l.id)} className="px-2 py-1 text-xs bg-emerald-500/20 text-emerald-300 rounded">
+                        Disburse
+                      </button>
+                    )}
+                    {l.status === 'active' && (
+                      <>
+                        <button onClick={() => restructure(l.id)} className="p-1.5 text-blue-400 hover:bg-slate-700 rounded" title="Restructure">
+                          <Calendar className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => flag(l.id)} className="p-1.5 text-orange-400 hover:bg-slate-700 rounded" title="Collections">
+                          <AlertCircle className="w-4 h-4" />
+                        </button>
+                      </>
+                    )}
+                    <button className="p-1.5 text-slate-400 hover:bg-slate-700 rounded">
+                      <FileText className="w-4 h-4" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {createOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setCreateOpen(false)}>
+          <div className="bg-slate-800 border border-slate-700 rounded-2xl max-w-lg w-full" onClick={(e) => e.stopPropagation()}>
+            <div className="p-6 border-b border-slate-700"><h2 className="text-xl font-bold text-white">New Loan Application</h2></div>
+            <div className="p-6 space-y-4">
               <div>
-                <p className="text-slate-400 text-sm">Loan ID</p><p className="text-white font-bold font-mono">{selectedLoan.id}</p>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Member</label>
+                <select value={form.memberId} onChange={(e) => setForm({...form, memberId: e.target.value})}
+                  className="w-full px-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg text-white">
+                  <option value="">Select member...</option>
+                  {members.map((m: any) => <option key={m.id} value={m.id}>{m.firstName} {m.lastName}</option>)}
+                </select>
               </div>
-              <Badge variant={selectedLoan.status === 'active' ? 'success' : selectedLoan.status === 'pending' ? 'warning' : 'danger'}>{selectedLoan.status}</Badge>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-slate-800/50 rounded-xl p-4"><p className="text-slate-400 text-sm">Original Amount</p><p className="text-xl font-bold text-white">${selectedLoan.amount.toLocaleString()}</p></div>
-              <div className="bg-slate-800/50 rounded-xl p-4"><p className="text-slate-400 text-sm">Outstanding Balance</p><p className="text-xl font-bold text-white">${selectedLoan.balance.toLocaleString()}</p></div>
-              <div><p className="text-slate-400 text-sm">Interest Rate</p><p className="text-white">{selectedLoan.rate}% APR</p></div>
-              <div><p className="text-slate-400 text-sm">Loan Term</p><p className="text-white">{selectedLoan.term} months</p></div>
-              <div><p className="text-slate-400 text-sm">Loan Type</p><p className="text-white capitalize">{selectedLoan.type}</p></div>
-              <div><p className="text-slate-400 text-sm">Member</p><p className="text-white">{selectedLoan.memberName}</p></div>
-              <div><p className="text-slate-400 text-sm">Start Date</p><p className="text-white">{selectedLoan.startDate}</p></div>
-              <div><p className="text-slate-400 text-sm">Next Payment</p><p className="text-white">{selectedLoan.nextPayment}</p></div>
-            </div>
-            <div className="bg-slate-800/50 rounded-xl p-4">
-              <p className="text-slate-400 text-sm mb-2">Repayment Progress</p>
-              <ProgressBar value={selectedLoan.progress} showLabel color={selectedLoan.progress > 50 ? 'emerald' : 'amber'} size="md" />
-            </div>
-            {selectedLoan.status === 'pending' && (
-              <div className="flex gap-3">
-                <Button variant="success" onClick={() => { handleApprove(selectedLoan); setShowViewModal(false); }} icon={<Check className="w-4 h-4" />}>Approve Loan</Button>
-                <Button variant="danger" onClick={() => { handleReject(selectedLoan); setShowViewModal(false); }} icon={<XCircle className="w-4 h-4" />}>Reject Loan</Button>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">Type</label>
+                  <select value={form.type} onChange={(e) => setForm({...form, type: e.target.value})}
+                    className="w-full px-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg text-white">
+                    {['personal', 'auto', 'mortgage', 'business', 'student', 'home_equity'].map(t => (
+                      <option key={t} value={t}>{t}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">Principal ($)</label>
+                  <input type="number" value={form.principal} onChange={(e) => setForm({...form, principal: +e.target.value})}
+                    className="w-full px-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg text-white" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">Term (months)</label>
+                  <input type="number" value={form.termMonths} onChange={(e) => setForm({...form, termMonths: +e.target.value})}
+                    className="w-full px-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg text-white" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">Interest Rate (%)</label>
+                  <input type="number" step="0.1" value={form.rate} onChange={(e) => setForm({...form, rate: +e.target.value})}
+                    className="w-full px-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg text-white" />
+                </div>
               </div>
-            )}
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Collateral (optional)</label>
+                <input value={form.collateral} onChange={(e) => setForm({...form, collateral: e.target.value})}
+                  placeholder="Vehicle, property, savings..."
+                  className="w-full px-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg text-white placeholder-slate-500" />
+              </div>
+              <div className="bg-slate-900/50 rounded-lg p-3 text-sm text-slate-300">
+                <p className="text-xs text-slate-400 uppercase mb-1">Estimated monthly payment</p>
+                <p className="text-xl font-bold text-white">
+                  ${((form.principal * (form.rate / 100 / 12)) / (1 - Math.pow(1 + form.rate / 100 / 12, -form.termMonths))).toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                </p>
+              </div>
+            </div>
+            <div className="p-6 border-t border-slate-700 flex justify-end gap-2">
+              <button onClick={() => setCreateOpen(false)} className="px-4 py-2 text-slate-300 hover:bg-slate-700 rounded-lg">Cancel</button>
+              <button onClick={create} disabled={!form.memberId} className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50">Submit Application</button>
+            </div>
           </div>
-        )}
-      </Modal>
-    </motion.div>
+        </div>
+      )}
+    </div>
   );
 }

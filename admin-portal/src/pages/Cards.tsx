@@ -1,137 +1,189 @@
-import { useState, useMemo, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Search, Plus, CreditCard, Snowflake, Ban, Eye, CheckCircle, AlertCircle, Download, RefreshCw, Loader2 } from 'lucide-react';
-import { useAdminStore } from '@/store/adminStore';
-import type { Card } from '@/store/adminStore';
-import { Button, Badge, Modal, Select, Table, ProgressBar } from '@/components/ui';
+import { useEffect, useState } from 'react';
+import { CreditCard, Plus, Search, Lock, Unlock, RefreshCw, MapPin, Eye, Copy, MoreVertical } from 'lucide-react';
+import * as api from '@/lib/api';
 
-const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.05 } } };
-const itemVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } };
+const cardNetworks = ['Visa', 'Mastercard', 'Amex', 'Discover'];
+const cardTypes = ['Debit', 'Credit', 'Corporate', 'Prepaid'];
 
 export default function Cards() {
-  const { cards, freezeCard, unfreezeCard, blockCard, activateCard, fetchCards, isLoading } = useAdminStore();
+  const [cards, setCards] = useState<any[]>([]);
+  const [search, setSearch] = useState('');
+  const [filterNetwork, setFilterNetwork] = useState('all');
+  const [issueOpen, setIssueOpen] = useState(false);
+  const [form, setForm] = useState({ memberId: '', type: 'Debit', network: 'Visa', variant: 'virtual' });
+  const [members, setMembers] = useState<any[]>([]);
 
   useEffect(() => {
-    fetchCards();
-  }, [fetchCards]);
+    api.cardsApi.getAll().then((r: any) => setCards(r.data || []));
+    api.membersApi.getAll().then((r: any) => setMembers((r.data || []).slice(0, 100)));
+  }, []);
 
-  const [search, setSearch] = useState('');
-  const [typeFilter, setTypeFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [showViewModal, setShowViewModal] = useState(false);
-  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const filtered = cards.filter(c =>
+    (filterNetwork === 'all' || c.network === filterNetwork) &&
+    (!search || c.memberName?.toLowerCase().includes(search.toLowerCase()) || c.last4?.includes(search))
+  );
 
-  const filteredCards = useMemo(() => {
-    return cards.filter(c => {
-      const matchesSearch = c.memberName.toLowerCase().includes(search.toLowerCase()) || c.last4.includes(search);
-      const matchesType = typeFilter === 'all' || c.type === typeFilter;
-      const matchesStatus = statusFilter === 'all' || c.status === statusFilter;
-      return matchesSearch && matchesType && matchesStatus;
-    });
-  }, [cards, search, typeFilter, statusFilter]);
-
-  const showToast = (message: string, type: 'success' | 'error') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
+  const issue = async () => {
+    if (!form.memberId) return;
+    const res: any = await api.cardsApi.issue({ ...form, member: members.find((m: any) => m.id === form.memberId) });
+    if (res.success) {
+      setCards([res.data, ...cards]);
+      setIssueOpen(false);
+    }
   };
 
-  const handleFreeze = (c: Card) => { freezeCard(c.id); showToast(`Card ending ${c.last4} has been frozen`, 'success'); };
-  const handleUnfreeze = (c: Card) => { unfreezeCard(c.id); showToast(`Card ending ${c.last4} has been unfrozen`, 'success'); };
-  const handleBlock = (c: Card) => { blockCard(c.id); showToast(`Card ending ${c.last4} has been blocked`, 'success'); };
-  const handleActivate = (c: Card) => { activateCard(c.id); showToast(`Card ending ${c.last4} has been activated`, 'success'); };
-
-  const stats = { total: cards.length, active: cards.filter(c => c.status === 'active').length, frozen: cards.filter(c => c.status === 'frozen').length, blocked: cards.filter(c => c.status === 'blocked').length };
-
-  const columns = [
-    { key: 'member', header: 'Member', render: (c: Card) => <span className="text-white font-medium">{c.memberName}</span> },
-    { key: 'type', header: 'Type', render: (c: Card) => <Badge variant="info">{c.type}</Badge> },
-    { key: 'network', header: 'Network', render: (c: Card) => <span className="text-slate-400">{c.network}</span> },
-    { key: 'last4', header: 'Card Number', render: (c: Card) => <span className="text-white font-mono">**** {c.last4}</span> },
-    { key: 'expiry', header: 'Expiry', render: (c: Card) => <span className="text-slate-400">{c.expiryDate}</span> },
-    { key: 'usage', header: 'Usage', render: (c: Card) => (
-      <div className="w-24"><ProgressBar value={c.used} max={c.limit} color="blue" /><p className="text-xs text-slate-500 mt-1">${c.used.toLocaleString()}</p></div>
-    )},
-    { key: 'status', header: 'Status', render: (c: Card) => (
-      <Badge variant={c.status === 'active' ? 'success' : c.status === 'frozen' ? 'warning' : 'danger'}>{c.status}</Badge>
-    )},
-    { key: 'actions', header: 'Actions', render: (c: Card) => (
-      <div className="flex items-center gap-2">
-        <button onClick={() => { setSelectedCard(c); setShowViewModal(true); }} className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg"><Eye className="w-4 h-4" /></button>
-        {c.status === 'active' && <button onClick={() => handleFreeze(c)} className="p-1.5 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 rounded-lg" title="Freeze"><Snowflake className="w-4 h-4" /></button>}
-        {c.status === 'frozen' && <button onClick={() => handleUnfreeze(c)} className="p-1.5 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 rounded-lg" title="Unfreeze"><CheckCircle className="w-4 h-4" /></button>}
-        {c.status !== 'blocked' && c.status !== 'pending' && <button onClick={() => handleBlock(c)} className="p-1.5 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg" title="Block"><Ban className="w-4 h-4" /></button>}
-        {c.status === 'pending' && <button onClick={() => handleActivate(c)} className="p-1.5 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 rounded-lg" title="Activate"><CheckCircle className="w-4 h-4" /></button>}
-      </div>
-    )}
-  ];
+  const toggleFreeze = async (id: string) => {
+    await api.cardsApi.freeze(id);
+    setCards(cards.map(c => c.id === id ? { ...c, status: c.status === 'frozen' ? 'active' : 'frozen' } : c));
+  };
+  const replace = async (id: string) => await api.cardsApi.replace(id);
+  const pinReset = async (id: string) => await api.cardsApi.resetPin(id);
 
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible" className="p-6 space-y-6">
-      {toast && (
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-4 py-3 rounded-xl border ${toast.type === 'success' ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' : 'bg-red-500/20 border-red-500/50 text-red-400'}`}>
-          {toast.type === 'success' ? <CheckCircle className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
-          <span className="text-sm font-medium">{toast.message}</span>
-        </motion.div>
-      )}
-
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
-        <div><h1 className="text-2xl font-bold text-white">Cards</h1><p className="text-slate-400 text-sm mt-1">Manage debit, credit, and virtual cards</p></div>
-        <div className="flex items-center gap-3">
-          <Button variant="secondary" icon={<Download className="w-4 h-4" />}>Export</Button>
-          <Button variant="primary" icon={<Plus className="w-4 h-4" />}>Issue Card</Button>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-white">Cards Management</h1>
+          <p className="text-slate-400 mt-1">Issue, freeze, replace, set travel notices, reset PIN</p>
         </div>
-      </motion.div>
+        <button onClick={() => setIssueOpen(true)}
+          className="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg flex items-center gap-2">
+          <Plus className="w-4 h-4" /> Issue Card
+        </button>
+      </div>
 
-      <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[{ label: 'Total Cards', value: stats.total }, { label: 'Active', value: stats.active }, { label: 'Frozen', value: stats.frozen }, { label: 'Blocked', value: stats.blocked }].map((s, i) => (
-          <div key={i} className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-            <p className="text-slate-500 text-sm">{s.label}</p><p className="text-2xl font-bold text-white mt-1">{s.value}</p>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {[
+          { label: 'Total Cards', value: cards.length, color: 'blue' },
+          { label: 'Active', value: cards.filter((c: any) => c.status === 'active').length, color: 'emerald' },
+          { label: 'Frozen', value: cards.filter((c: any) => c.status === 'frozen').length, color: 'cyan' },
+          { label: 'Replacement Pending', value: cards.filter((c: any) => c.replacementPending).length, color: 'amber' },
+        ].map(s => (
+          <div key={s.label} className="bg-slate-800/50 border border-slate-700 rounded-xl p-4">
+            <p className="text-xs text-slate-400 uppercase">{s.label}</p>
+            <p className={`text-2xl font-bold text-${s.color}-400 mt-1`}>{s.value}</p>
           </div>
         ))}
-      </motion.div>
+      </div>
 
-      <motion.div variants={itemVariants} className="flex items-center gap-4 flex-wrap">
-        <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-          <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search cards..." className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500/50" />
+      <div className="bg-slate-800/50 border border-slate-700 rounded-2xl p-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by member or last 4..."
+            className="w-full pl-10 pr-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg text-white text-sm" />
         </div>
-        <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className="px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-slate-300">
-          <option value="all">All Types</option><option value="debit">Debit</option><option value="credit">Credit</option><option value="virtual">Virtual</option>
+        <select value={filterNetwork} onChange={(e) => setFilterNetwork(e.target.value)}
+          className="px-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg text-white text-sm">
+          <option value="all">All networks</option>
+          {cardNetworks.map(n => <option key={n} value={n}>{n}</option>)}
         </select>
-        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-slate-300">
-          <option value="all">All Status</option><option value="active">Active</option><option value="frozen">Frozen</option><option value="blocked">Blocked</option><option value="pending">Pending</option><option value="expired">Expired</option>
-        </select>
-      </motion.div>
+        <div className="text-sm text-slate-400 flex items-center">
+          {cardTypes.map(t => <span key={t} className="px-2 py-1 bg-slate-700 rounded text-xs mr-1">{t}</span>)}
+        </div>
+      </div>
 
-      <motion.div variants={itemVariants} className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-        <Table columns={columns} data={filteredCards} keyExtractor={c => c.id} emptyMessage="No cards found" />
-      </motion.div>
-
-      <Modal isOpen={showViewModal} onClose={() => setShowViewModal(false)} title="Card Details" size="lg">
-        {selectedCard && (
-          <div className="space-y-6">
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 border border-slate-700">
-              <div className="flex items-center justify-between mb-6">
-                <CreditCard className="w-10 h-10 text-slate-400" />
-                <span className="text-white font-bold">{selectedCard.network}</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filtered.slice(0, 30).map(c => (
+          <div key={c.id} className={`rounded-2xl p-5 relative overflow-hidden ${
+            c.status === 'frozen'
+              ? 'bg-gradient-to-br from-cyan-900/40 to-slate-900 border border-cyan-700/30'
+              : 'bg-gradient-to-br from-slate-700/60 to-slate-900 border border-slate-700'
+          }`}>
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <p className="text-xs text-slate-300 uppercase">{c.network} {c.type}</p>
+                <p className="text-lg text-white font-bold">{c.memberName}</p>
               </div>
-              <p className="text-2xl font-mono text-white tracking-wider mb-4">**** **** **** {selectedCard.last4}</p>
-              <div className="flex justify-between"><div><p className="text-slate-500 text-xs">Card Holder</p><p className="text-white">{selectedCard.memberName}</p></div><div><p className="text-slate-500 text-xs">Expires</p><p className="text-white">{selectedCard.expiryDate}</p></div></div>
+              <div className="w-10 h-7 bg-gradient-to-r from-amber-300 to-yellow-500 rounded-md" />
             </div>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="bg-slate-800/50 rounded-xl p-4"><p className="text-slate-400 text-sm">Type</p><p className="text-white capitalize">{selectedCard.type}</p></div>
-              <div className="bg-slate-800/50 rounded-xl p-4"><p className="text-slate-400 text-sm">Status</p><Badge variant={selectedCard.status === 'active' ? 'success' : 'warning'}>{selectedCard.status}</Badge></div>
-              <div className="bg-slate-800/50 rounded-xl p-4"><p className="text-slate-400 text-sm">Limit</p><p className="text-white">${selectedCard.limit.toLocaleString()}</p></div>
+            <div className="font-mono text-white tracking-wider text-sm">
+              **** **** **** {c.last4}
             </div>
-            <div className="flex gap-3">
-              {selectedCard.status === 'active' && <Button variant="secondary" onClick={() => { handleFreeze(selectedCard); setShowViewModal(false); }} icon={<Snowflake className="w-4 h-4" />}>Freeze</Button>}
-              {selectedCard.status === 'frozen' && <Button variant="success" onClick={() => { handleUnfreeze(selectedCard); setShowViewModal(false); }} icon={<CheckCircle className="w-4 h-4" />}>Unfreeze</Button>}
-              {selectedCard.status !== 'blocked' && selectedCard.status !== 'pending' && <Button variant="danger" onClick={() => { handleBlock(selectedCard); setShowViewModal(false); }} icon={<Ban className="w-4 h-4" />}>Block</Button>}
+            <div className="flex items-center justify-between mt-4">
+              <div>
+                <p className="text-[10px] text-slate-400 uppercase">Expires</p>
+                <p className="text-sm text-white">{c.expiry}</p>
+              </div>
+              <span className={`px-2 py-1 text-xs rounded-full ${
+                c.status === 'active' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-cyan-500/20 text-cyan-300'
+              }`}>{c.status}</span>
+            </div>
+            <div className="flex gap-1 mt-3">
+              <button onClick={() => toggleFreeze(c.id)}
+                className="flex-1 py-1.5 text-xs bg-slate-800/50 hover:bg-slate-700 text-slate-300 rounded flex items-center justify-center gap-1">
+                {c.status === 'frozen' ? <Unlock className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
+                {c.status === 'frozen' ? 'Unfreeze' : 'Freeze'}
+              </button>
+              <button onClick={() => replace(c.id)} className="flex-1 py-1.5 text-xs bg-slate-800/50 hover:bg-slate-700 text-slate-300 rounded flex items-center justify-center gap-1">
+                <RefreshCw className="w-3 h-3" />Replace
+              </button>
+              <button onClick={() => pinReset(c.id)} className="flex-1 py-1.5 text-xs bg-slate-800/50 hover:bg-slate-700 text-slate-300 rounded flex items-center justify-center gap-1">
+                <Eye className="w-3 h-3" />PIN
+              </button>
+              <button className="flex-1 py-1.5 text-xs bg-slate-800/50 hover:bg-slate-700 text-slate-300 rounded flex items-center justify-center gap-1">
+                <MapPin className="w-3 h-3" />Travel
+              </button>
             </div>
           </div>
-        )}
-      </Modal>
-    </motion.div>
+        ))}
+      </div>
+
+      {issueOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setIssueOpen(false)}>
+          <div className="bg-slate-800 border border-slate-700 rounded-2xl max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+            <div className="p-6 border-b border-slate-700">
+              <h2 className="text-xl font-bold text-white">Issue New Card</h2>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Member</label>
+                <select value={form.memberId} onChange={(e) => setForm({...form, memberId: e.target.value})}
+                  className="w-full px-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg text-white">
+                  <option value="">Select member...</option>
+                  {members.map((m: any) => <option key={m.id} value={m.id}>{m.firstName} {m.lastName}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Type</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {cardTypes.map(t => (
+                    <label key={t} className={`flex items-center gap-2 p-2 border rounded-lg cursor-pointer ${form.type === t ? 'bg-blue-500/10 border-blue-500/50' : 'bg-slate-900/30 border-slate-700'}`}>
+                      <input type="radio" checked={form.type === t} onChange={() => setForm({...form, type: t})} />
+                      <span className="text-sm text-white">{t}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Network</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {cardNetworks.map(n => (
+                    <label key={n} className={`flex items-center gap-2 p-2 border rounded-lg cursor-pointer ${form.network === n ? 'bg-blue-500/10 border-blue-500/50' : 'bg-slate-900/30 border-slate-700'}`}>
+                      <input type="radio" checked={form.network === n} onChange={() => setForm({...form, network: n})} />
+                      <span className="text-sm text-white">{n}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Variant</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {['virtual', 'physical'].map(v => (
+                    <label key={v} className={`flex items-center gap-2 p-2 border rounded-lg cursor-pointer ${form.variant === v ? 'bg-blue-500/10 border-blue-500/50' : 'bg-slate-900/30 border-slate-700'}`}>
+                      <input type="radio" checked={form.variant === v} onChange={() => setForm({...form, variant: v})} />
+                      <span className="text-sm text-white capitalize">{v}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="p-6 border-t border-slate-700 flex justify-end gap-2">
+              <button onClick={() => setIssueOpen(false)} className="px-4 py-2 text-slate-300 hover:bg-slate-700 rounded-lg">Cancel</button>
+              <button onClick={issue} disabled={!form.memberId} className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50">Issue Card</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
