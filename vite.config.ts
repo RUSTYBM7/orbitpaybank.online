@@ -50,7 +50,7 @@ function securityHeaders() {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: './',
+  base: '/',
   plugins: [
     react({
       // Enable error overlay in development

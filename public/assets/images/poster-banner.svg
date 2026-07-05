@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4B0082"/>
+      <stop offset="50%" stop-color="#1A1530"/>
+      <stop offset="100%" stop-color="#0F0A1F"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#F4D03F"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="600" fill="url(#bg)"/>
+
+  <!-- Decorative orbs -->
+  <circle cx="200" cy="150" r="80" fill="#6B46C1" opacity="0.3"/>
+  <circle cx="1000" cy="450" r="120" fill="#D4AF37" opacity="0.15"/>
+
+  <!-- Big OP mark -->
+  <text x="600" y="280" font-family="Inter, sans-serif" font-size="220" font-weight="800" text-anchor="middle" fill="url(#gold)">OP</text>
+
+  <text x="600" y="380" font-family="Inter, sans-serif" font-size="64" font-weight="800" text-anchor="middle" fill="#FFFFFF" letter-spacing="-2">OrbitPay</text>
+  <text x="600" y="430" font-family="Inter, sans-serif" font-size="18" font-weight="500" text-anchor="middle" fill="#D4AF37" letter-spacing="8">CREDIT UNION</text>
+  <line x1="500" y1="460" x2="700" y2="460" stroke="url(#gold)" stroke-width="2"/>
+  <text x="600" y="510" font-family="Inter, sans-serif" font-size="20" font-weight="400" text-anchor="middle" fill="#B8B0D0">5.25% APY · FDIC Insured · 2M+ Members</text>
+</svg>

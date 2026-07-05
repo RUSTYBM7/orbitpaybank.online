@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="skyline" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0F0A1F"/>
+      <stop offset="60%" stop-color="#1A1530"/>
+      <stop offset="100%" stop-color="#4B0082"/>
+    </linearGradient>
+    <linearGradient id="buildingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A1530"/>
+      <stop offset="100%" stop-color="#0F0A1F"/>
+    </linearGradient>
+    <radialGradient id="windowGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#D4AF37" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#D4AF37" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Sky -->
+  <rect width="800" height="600" fill="url(#skyline)"/>
+
+  <!-- Distant buildings (silhouettes) -->
+  <g opacity="0.5">
+    <rect x="50" y="380" width="60" height="220" fill="#1A1530"/>
+    <rect x="120" y="340" width="40" height="260" fill="#0F0A1F"/>
+    <rect x="170" y="400" width="80" height="200" fill="#1A1530"/>
+    <rect x="260" y="320" width="50" height="280" fill="#0F0A1F"/>
+    <rect x="540" y="360" width="60" height="240" fill="#1A1530"/>
+    <rect x="610" y="320" width="40" height="280" fill="#0F0A1F"/>
+    <rect x="660" y="380" width="80" height="220" fill="#1A1530"/>
+    <rect x="750" y="400" width="50" height="200" fill="#0F0A1F"/>
+  </g>
+
+  <!-- Main HQ building -->
+  <g transform="translate(290, 100)">
+    <rect x="0" y="0" width="220" height="500" fill="url(#buildingGrad)" stroke="#4B0082" stroke-width="2"/>
+
+    <!-- Glass facade reflections -->
+    <rect x="0" y="0" width="220" height="500" fill="url(#windowGlow)" opacity="0.2"/>
+
+    <!-- Windows grid -->
+    <g fill="#D4AF37" opacity="0.7">
+      <rect x="20" y="40" width="20" height="30"/>
+      <rect x="60" y="40" width="20" height="30"/>
+      <rect x="100" y="40" width="20" height="30"/>
+      <rect x="140" y="40" width="20" height="30"/>
+      <rect x="180" y="40" width="20" height="30"/>
+
+      <rect x="20" y="100" width="20" height="30"/>
+      <rect x="60" y="100" width="20" height="30"/>
+      <rect x="100" y="100" width="20" height="30" opacity="0.4"/>
+      <rect x="140" y="100" width="20" height="30"/>
+      <rect x="180" y="100" width="20" height="30"/>
+
+      <rect x="20" y="160" width="20" height="30"/>
+      <rect x="60" y="160" width="20" height="30" opacity="0.4"/>
+      <rect x="100" y="160" width="20" height="30"/>
+      <rect x="140" y="160" width="20" height="30"/>
+      <rect x="180" y="160" width="20" height="30" opacity="0.4"/>
+
+      <rect x="20" y="220" width="20" height="30"/>
+      <rect x="60" y="220" width="20" height="30"/>
+      <rect x="100" y="220" width="20" height="30"/>
+      <rect x="140" y="220" width="20" height="30" opacity="0.4"/>
+      <rect x="180" y="220" width="20" height="30"/>
+
+      <rect x="20" y="280" width="20" height="30" opacity="0.4"/>
+      <rect x="60" y="280" width="20" height="30"/>
+      <rect x="100" y="280" width="20" height="30"/>
+      <rect x="140" y="280" width="20" height="30"/>
+      <rect x="180" y="280" width="20" height="30"/>
+
+      <rect x="20" y="340" width="20" height="30"/>
+      <rect x="60" y="340" width="20" height="30" opacity="0.4"/>
+      <rect x="100" y="340" width="20" height="30"/>
+      <rect x="140" y="340" width="20" height="30"/>
+      <rect x="180" y="340" width="20" height="30" opacity="0.4"/>
+    </g>
+
+    <!-- OrbitPay logo on building -->
+    <rect x="40" y="200" width="140" height="60" fill="#0F0A1F" stroke="#D4AF37" stroke-width="1.5"/>
+    <text x="110" y="228" font-family="Inter, sans-serif" font-size="14" font-weight="800" text-anchor="middle" fill="#D4AF37">ORBITPAY</text>
+    <text x="110" y="248" font-family="Inter, sans-serif" font-size="9" font-weight="500" text-anchor="middle" fill="#B8B0D0" letter-spacing="2">CREDIT UNION</text>
+  </g>
+
+  <!-- Foreground plaza -->
+  <rect x="0" y="500" width="800" height="100" fill="#0F0A1F"/>
+  <line x1="0" y1="500" x2="800" y2="500" stroke="#4B0082" stroke-width="2"/>
+
+  <!-- People silhouettes -->
+  <g fill="#1A1530" opacity="0.8">
+    <circle cx="120" cy="540" r="8"/><rect x="112" y="548" width="16" height="40"/>
+    <circle cx="200" cy="545" r="7"/><rect x="193" y="552" width="14" height="36"/>
+    <circle cx="650" cy="540" r="8"/><rect x="642" y="548" width="16" height="40"/>
+    <circle cx="720" cy="545" r="7"/><rect x="713" y="552" width="14" height="36"/>
+  </g>
+
+  <!-- Title -->
+  <text x="400" y="50" font-family="Inter, sans-serif" font-size="14" font-weight="500" text-anchor="middle" fill="#D4AF37" letter-spacing="6">GLOBAL HEADQUARTERS</text>
+</svg>

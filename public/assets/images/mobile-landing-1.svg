@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="600" height="800">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F0A1F"/>
+      <stop offset="100%" stop-color="#1A1530"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="800" fill="url(#bg)"/>
+  <text x="300" y="380" font-family="Inter, sans-serif" font-size="120" font-weight="800" text-anchor="middle" fill="#D4AF37">OP</text>
+  <text x="300" y="450" font-family="Inter, sans-serif" font-size="48" font-weight="800" text-anchor="middle" fill="#FFFFFF">OrbitPay</text>
+  <text x="300" y="490" font-family="Inter, sans-serif" font-size="14" font-weight="500" text-anchor="middle" fill="#D4AF37" letter-spacing="6">CREDIT UNION</text>
+  <line x1="200" y1="510" x2="400" y2="510" stroke="#D4AF37" stroke-width="2"/>
+  <text x="300" y="560" font-family="Inter, sans-serif" font-size="18" font-weight="400" text-anchor="middle" fill="#B8B0D0">Mobile Banking · iOS · Android</text>
+</svg>
