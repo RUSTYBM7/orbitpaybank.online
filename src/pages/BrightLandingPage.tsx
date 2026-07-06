@@ -563,19 +563,16 @@ export default function BrightLandingPage() {
             </h2>
             <p className="mx-auto mt-3 max-w-2xl text-sm text-neutral-600 sm:text-base">
               A snapshot of the spaces where the OrbitPay team works, builds, and
-              serves our members — from the Sacramento headquarters to the
-              Frankfurt operations center.
+              serves our members — from the Frankfurt operations center to the
+              member portal on every device.
             </p>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { src: '/imgs/orbitpay-v2/conference-room-1.png', label: 'Sacramento HQ', sub: '500 Capitol Mall' },
-              { src: '/imgs/orbitpay-v2/conference-room-2.png', label: 'Conference floor', sub: 'Team room' },
+              { src: '/imgs/orbitpay-v2/conference-room-1.png', label: 'Frankfurt Operations', sub: 'Europa Headquarters, Germany' },
               { src: '/imgs/orbitpay-v2/team-meeting-1.jpeg', label: 'Brand room', sub: 'Authentic corporate branding' },
-              { src: '/imgs/orbitpay-v2/team-meeting-2.jpeg', label: 'Member services', sub: 'Floor 12' },
-              { src: '/imgs/orbitpay-v2/lobby-1.png', label: 'Lobby', sub: 'Capitol Mall' },
-              { src: '/imgs/orbitpay-v2/lobby-2.png', label: 'Lounge', sub: 'Member floor' },
+              { src: '/imgs/orbitpay-v2/team-meeting-2.jpeg', label: 'OrbitPay Mobile APP', sub: 'iOS & Android — member portal' },
               { src: '/imgs/orbitpay-v2/office-1.png', label: 'Open floor', sub: 'Engineering' },
               { src: '/imgs/orbitpay-v2/office-2.png', label: 'Operations', sub: 'Floor 8' },
             ].map((img, i) => (
