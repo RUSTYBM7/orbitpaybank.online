@@ -2,6 +2,9 @@ import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import Login from './pages/Login';
+import Forbidden from './pages/Forbidden';
+import RequireAuth from './components/RequireAuth';
+import type { Permission } from './store/authStore';
 
 // Lazy-load all admin pages so the initial bundle stays small
 const Dashboard = lazy(() => import('./pages/Dashboard'));
@@ -24,6 +27,7 @@ const Support = lazy(() => import('./pages/Support'));
 const Documents = lazy(() => import('./pages/Documents'));
 const Notifications = lazy(() => import('./pages/Notifications'));
 const Settings = lazy(() => import('./pages/Settings'));
+const MfaSettings = lazy(() => import('./pages/MfaSettings'));
 const Communications = lazy(() => import('./pages/Communications'));
 const Verification = lazy(() => import('./pages/Verification'));
 const Statements = lazy(() => import('./pages/Statements'));
@@ -42,10 +46,46 @@ const Loader = () => (
   </div>
 );
 
+// Route → required permission catalog (FIX-06 RBAC).
+// Maps each admin route to the Permission an admin needs to access it.
+// super_admin has all permissions via the authStore hasPermission() check,
+// so admins with fewer permissions get bounced to /403.
+const ROUTE_PERMISSIONS: Record<string, Permission> = {
+  dashboard: 'system.view',
+  members: 'members.view',
+  accounts: 'accounts.view',
+  transactions: 'transactions.view',
+  cards: 'cards.view',
+  loans: 'loans.view',
+  kyc: 'kyc.view',
+  fraud: 'fraud.view',
+  branches: 'branches.view',
+  employees: 'employees.view',
+  financial: 'financial.view',
+  marketing: 'marketing.view',
+  cms: 'cms.view',
+  compliance: 'compliance.view',
+  audit: 'audit.view',
+  reports: 'reports.view',
+  support: 'support.view',
+  documents: 'documents.view',
+  notifications: 'notifications.view',
+  settings: 'settings.view',
+  'settings/mfa': 'settings.edit',
+  communications: 'notifications.view',
+  verification: 'kyc.view',
+  statements: 'accounts.view',
+  investments: 'financial.view',
+  impersonation: 'system.configure',
+  'ai-assistant': 'system.view',
+  automation: 'system.configure',
+};
+
 function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/403" element={<Forbidden />} />
       <Route path="/*" element={<Layout />}>
         <Route
           index
@@ -76,6 +116,7 @@ function App() {
           { path: 'documents', el: <Documents /> },
           { path: 'notifications', el: <Notifications /> },
           { path: 'settings', el: <Settings /> },
+          { path: 'settings/mfa', el: <MfaSettings /> },
           { path: 'communications', el: <Communications /> },
           { path: 'verification', el: <Verification /> },
           { path: 'statements', el: <Statements /> },
@@ -87,7 +128,11 @@ function App() {
           <Route
             key={r.path}
             path={r.path}
-            element={<Suspense fallback={<Loader />}>{r.el}</Suspense>}
+            element={
+              <RequireAuth permission={ROUTE_PERMISSIONS[r.path]}>
+                <Suspense fallback={<Loader />}>{r.el}</Suspense>
+              </RequireAuth>
+            }
           />
         ))}
       </Route>

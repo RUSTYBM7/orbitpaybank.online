@@ -82,32 +82,31 @@ const BRAND_IMAGES = {
   logoGlass: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMTYyNmI4Ii8+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnbG93IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMTYyNmI4Ii8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMjYzYmFiYyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik0gMjAgMjAgTCA1MCAyMCBMIDUwIDUwIEwgMjAgNTAgWiIgZmlsbD0idXJsKCNnbG93KSIgb3BhY2l0eT0iMC42Ii8+PHBhdGggZD0iTSAyMCA41IDUgTCAgNS41IDIwIEwgMjAgMjAgUCAgMjAgNS41IFoiIGZpbGw9InVybCgjZ2xvdykgIiBvcGFjaXR5PSIwLjQiLz48dGV4dCB4PSI1MCUiIHk9IjY1JSIgZm9udC1zaXplPSIxNSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5PcmJpdHBheTwvdGV4dD48L3N2Zz4=',
   logo3D: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMTYyNmI4Ii8+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnbG93IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMTYyNmI4Ii8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMjYzYmFiYyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxlbGxpcHNlIGN4PSI1MCIgY3k9IjUwIiByeD0iMzUiIHJ5PSIyNSIgZmlsbD0idXJsKCNnbG93KSIgb3BhY2l0eT0iMC43Ii8+PHBhdGggZD0iTSAyNSAyNSBMIDc1IDI1IEwgNzUgNzUgTCAyNSA3NSBaIiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz48dGV4dCB4PSI1MCUiIHk9IjU1JSIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5PcmJpdHBheTwvdGV4dD48dGV4dCB4PSI1MCUiIHk9IjY1JSIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9Im5vcm1hbCIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VmlzaW9uPC90ZXh0Pjwvc3ZnPg==',
   // User's custom brand images - replacing Unsplash
-  globalVision: '/images/orbitpay-global-vision.jpeg',      // Global Vision kiosk with headquarters info
-  europaHQ: '/images/orbitpay-frankfurt-hq.jpeg',           // Frankfurt HQ billboard
-  reception: '/images/orbitpay-office.jpeg',                 // Office/reception branding
-  headquarters: '/images/orbitpay-global-vision.jpeg',       // Using custom image
-  heroBanner: '/images/orbitpay-frankfurt-hq.jpeg',          // Using custom image
-  frankfurtSkyline: '/images/orbitpay-frankfurt-hq.jpeg',   // Using custom image
-  europaExterior: '/images/orbitpay-office.jpeg',            // Using custom image
-  // Fallback Unsplash images for additional brand assets
-  logoFull: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80',
-  logoMetallic: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&q=80'
+  globalVision: '/imgs/modern-bank-headquarters-exterior.jpg',
+  europaHQ: '/imgs/modern-bank-headquarters-building-exterior.jpg',
+  reception: '/imgs/modern-bank-building-exterior.jpg',
+  headquarters: '/imgs/modern-bank-headquarters-exterior.jpg',
+  heroBanner: '/imgs/modern-bank-headquarters-building-exterior.jpg',
+  frankfurtSkyline: '/imgs/modern-bank-building-exterior-architecture.jpg',
+  europaExterior: '/imgs/modern-bank-building-exterior.jpg',
+  logoFull: '/imgs/abstract-fintech-banking-technology.jpg',
+  logoMetallic: '/imgs/modern-fintech-digital-banking-technology-abstract.jpg'
 };
 
-// High-quality Unsplash images for banking content (with custom brand images where available)
+// High-quality template photos for banking content (from /imgs/ folder)
 const UNSPLASH_IMAGES = {
-  hero: '/images/orbitpay-frankfurt-hq.jpeg',  // Using custom brand image for hero
-  cityscape: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1600&q=90',
-  team: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&q=90',
-  community: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=1200&q=90',
-  mobile: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1200&q=90',
-  security: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&q=90',
-  growth: 'https://images.unsplash.com/photo-1579532537598-459ecdaf39cc?w=1200&q=90',
-  investment: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=90',
-  family: 'https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=1200&q=90',
-  business: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&q=90',
-  card: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=1200&q=90',
-  global: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1600&q=90',
+  hero: '/imgs/modern-bank-headquarters-building-exterior.jpg',
+  cityscape: '/imgs/modern-bank-building-exterior-architecture.jpg',
+  team: '/imgs/diverse-community-banking-team.jpg',
+  community: '/imgs/credit-union-community-team-outdoors.jpg',
+  mobile: '/imgs/secure-mobile-banking-app-transaction.jpg',
+  security: '/imgs/secure-bank-vault-gold-bars.jpg',
+  growth: '/imgs/money-savings-growth-concept.jpg',
+  investment: '/imgs/savings-growth-investment-concept.jpg',
+  family: '/imgs/happy-family-managing-finances-online-banking.jpg',
+  business: '/imgs/modern-open-plan-office-business-workspace.jpg',
+  card: '/imgs/premium-credit-card-payment-transaction.jpg',
+  global: '/imgs/abstract-fintech-banking-technology.jpg',
 };
 
 export default function LandingPage() {
@@ -197,7 +196,7 @@ export default function LandingPage() {
   };
 
   const handleDemoLogin = () => {
-    const demoUser = { id: 'u1', email: 'demo@orbitpay.com', phone: '+1-555-0101', fullName: 'Sarah Chen', avatar: 'https://i.pravatar.cc/150?u=sarah', kycStatus: 'verified' as const, accountStatus: 'active' as const, tier: 'premium' as const, dailyLimit: 50000, weeklyLimit: 200000, monthlyLimit: 500000, balanceUsd: 26887.09, balanceEur: 22150.50, balanceGbp: 18920.75, balanceBtc: 0.45, btcPrice: 67540.20, address: '123 Market St, San Francisco, CA 94105', dateOfBirth: '1990-03-15', createdAt: '2024-01-10T08:00:00Z', updatedAt: '2024-12-15T14:30:00Z', lastActive: '2024-12-20T10:15:00Z', isOnline: true };
+    const demoUser = { id: 'u1', email: 'demo@orbitpaybank.online', phone: '+1-555-0101', fullName: 'Sarah Chen', avatar: 'https://i.pravatar.cc/150?u=sarah', kycStatus: 'verified' as const, accountStatus: 'active' as const, tier: 'premium' as const, dailyLimit: 50000, weeklyLimit: 200000, monthlyLimit: 500000, balanceUsd: 26887.09, balanceEur: 22150.50, balanceGbp: 18920.75, balanceBtc: 0.45, btcPrice: 67540.20, address: '123 Market St, San Francisco, CA 94105', dateOfBirth: '1990-03-15', createdAt: '2024-01-10T08:00:00Z', updatedAt: '2024-12-15T14:30:00Z', lastActive: '2024-12-20T10:15:00Z', isOnline: true };
     login(demoUser);
     navigate('/app');
   };
@@ -356,7 +355,7 @@ export default function LandingPage() {
 
             {/* CTA Buttons */}
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex items-center gap-3">
-              <button onClick={() => (() => window.location.assign("/login"))} className="hidden sm:block text-sm font-medium text-slate-300 hover:text-emerald-400 px-4 py-2 transition-colors">
+              <button onClick={() => (() => window.location.assign("/auth/sign-in"))} className="hidden sm:block text-sm font-medium text-slate-300 hover:text-emerald-400 px-4 py-2 transition-colors">
                 Sign In
               </button>
               <button onClick={() => { setShowAccountWizard(true); }} className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:shadow-xl hover:shadow-emerald-500/30 transition-all duration-300 hover:scale-105">
@@ -392,7 +391,7 @@ export default function LandingPage() {
                   Open Free Account
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
-                <button onClick={() => (() => window.location.assign("/login"))} className="inline-flex items-center justify-center gap-2 bg-slate-800/50 backdrop-blur-sm text-white font-semibold px-8 py-4 rounded-full border border-slate-700 hover:border-emerald-500/50 hover:bg-slate-800 transition-all duration-300">
+                <button onClick={() => (() => window.location.assign("/auth/sign-in"))} className="inline-flex items-center justify-center gap-2 bg-slate-800/50 backdrop-blur-sm text-white font-semibold px-8 py-4 rounded-full border border-slate-700 hover:border-emerald-500/50 hover:bg-slate-800 transition-all duration-300">
                   Sign In
                 </button>
               </div>
@@ -1266,7 +1265,7 @@ export default function LandingPage() {
               <h2 className="text-3xl lg:text-4xl font-bold mb-4">Ready to Start Banking Better?</h2>
               <p className="text-lg text-emerald-100 mb-8 max-w-2xl mx-auto">Open your free account in minutes. No credit check required, no monthly fees, and start earning up to 5.25% APY today.</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button onClick={() => { (() => window.location.assign('/signup')); setShowAccountTypeModal(true); }} className="inline-flex items-center justify-center gap-2 bg-white text-emerald-600 font-bold px-8 py-4 rounded-full hover:bg-emerald-50 transition-colors">
+                <button onClick={() => { (() => window.location.assign('/auth/sign-up')); setShowAccountTypeModal(true); }} className="inline-flex items-center justify-center gap-2 bg-white text-emerald-600 font-bold px-8 py-4 rounded-full hover:bg-emerald-50 transition-colors">
                   Open Free Account
                   <ArrowRight className="w-5 h-5" />
                 </button>
@@ -1566,7 +1565,7 @@ export default function LandingPage() {
                     Don't have an account?{' '}
                     <button
                       type="button"
-                      onClick={() => { setShowLoginModal(false); (() => window.location.assign('/signup')); setShowAccountTypeModal(true); }}
+                      onClick={() => { setShowLoginModal(false); (() => window.location.assign('/auth/sign-up')); setShowAccountTypeModal(true); }}
                       className="text-emerald-300 hover:text-emerald-200 font-medium transition-colors"
                     >
                       Open Account
@@ -1884,7 +1883,7 @@ export default function LandingPage() {
           <AccountCreationWizard
             onComplete={() => {
               setShowAccountWizard(false);
-              (() => window.location.assign("/login"));
+              (() => window.location.assign("/auth/sign-in"));
             }}
             onCancel={() => setShowAccountWizard(false)}
           />

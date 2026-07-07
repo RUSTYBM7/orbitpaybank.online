@@ -91,7 +91,7 @@ const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
   const demoAccounts = [
     { email: 'john.smith@email.com', password: 'demo123', name: 'John Smith' },
     { email: 'sarah.j@email.com', password: 'demo123', name: 'Sarah Johnson' },
-    { email: 'demo@orbitpay.com', password: 'demo123', name: 'Demo User' },
+    { email: 'demo@orbitpaybank.online', password: 'demo123', name: 'Demo User' },
   ]
 
   // Handle escape key

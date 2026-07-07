@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GlassCard, GlassButton, GlassBadge } from '@/components/glass';
 import { useStore } from '@/store';
 import {
@@ -18,6 +19,7 @@ import {
 } from 'lucide-react';;
 import { motion } from 'framer-motion';
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
+import { PhotoHero, TEMPLATE_PHOTOS } from '@/components/bright';
 
 const aiInvestmentInsights = [
   { text: "Your portfolio has outperformed 78% of similar investors", icon: TrendingUp, color: 'emerald' },
@@ -55,6 +57,7 @@ const chartData = {
 type TimeRange = '1W' | '1M' | '6M' | '1Y' | 'ALL';
 
 export default function InvestmentScreen() {
+  const navigate = useNavigate();
   const { user } = useStore();
   const [timeRange, setTimeRange] = useState<TimeRange>('1W');
   const [oneTimeAmount, setOneTimeAmount] = useState(1000);
@@ -119,6 +122,16 @@ export default function InvestmentScreen() {
 
   return (
     <div className="p-5 space-y-5 animate-fade-in">
+      {/* Hero photo — template /imgs/ library */}
+      <PhotoHero
+        imageUrl={TEMPLATE_PHOTOS.investment.hero}
+        eyebrow="AI-powered"
+        title="Watch your savings grow"
+        description="Diversified portfolios, real-time insights, and goal-based investing — all on autopilot."
+        accent="emerald"
+        ctaLabel="Start investing"
+        onCta={() => navigate('/app/onboarding/wizard')}
+      />
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

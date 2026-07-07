@@ -20,12 +20,12 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
     setIsLoading(true);
 
     // Simulate authentication
-    if (email === 'admin@orbitpay.com' && password === 'admin123') {
+    if (email === 'admin@orbitpaybank.online' && password === 'admin123') {
       setTimeout(() => {
         onLogin();
       }, 1000);
     } else {
-      setError('Invalid credentials. Use admin@orbitpay.com / admin123');
+      setError('Invalid credentials. Use admin@orbitpaybank.online / admin123');
       setIsLoading(false);
     }
   };
@@ -78,7 +78,7 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@orbitpay.com"
+                  placeholder="admin@orbitpaybank.online"
                   className="w-full px-4 py-3 pl-12 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
                   required
                 />
@@ -136,7 +136,7 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
           {/* Demo Credentials */}
           <div className="mt-6 p-4 bg-slate-700/30 rounded-xl border border-slate-600/50">
             <p className="text-xs text-slate-400 text-center">
-              Demo: <span className="text-emerald-400">admin@orbitpay.com</span> / <span className="text-emerald-400">admin123</span>
+              Demo: <span className="text-emerald-400">admin@orbitpaybank.online</span> / <span className="text-emerald-400">admin123</span>
             </p>
           </div>
 
