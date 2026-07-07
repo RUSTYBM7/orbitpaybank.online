@@ -58,6 +58,7 @@ interface AppState {
   setKycDocuments: (docs: KycDocument[]) => void;
   updateKycDocument: (id: string, updates: Partial<KycDocument>) => void;
   setNotifications: (notifications: Notification[]) => void;
+  addNotification: (notification: Notification) => void;
   markNotificationRead: (id: string) => void;
   setUsers: (users: User[]) => void;
   updateUser: (id: string, updates: Partial<User>) => void;
@@ -199,14 +200,10 @@ export const useStore = create<AppState>((set, get) => ({
       createdAt: '2023-02-01T10:00:00Z',
     },
   ],
-  transactions: [
-    { id: 'tx-1', userId: 'demo-user', type: 'deposit', amount: 3200, currency: 'USD', description: 'Salary deposit', status: 'completed', createdAt: new Date().toISOString(), date: new Date().toISOString() },
-    { id: 'tx-2', userId: 'demo-user', type: 'card_purchase', amount: -149.99, currency: 'USD', description: 'Amazon', status: 'completed', createdAt: new Date(Date.now()-86400000).toISOString(), date: new Date(Date.now()-86400000).toISOString(), recipientAvatar: null, merchant: 'Amazon' },
-    { id: 'tx-3', userId: 'demo-user', type: 'card_purchase', amount: -42.50, currency: 'USD', description: 'Uber', status: 'completed', createdAt: new Date(Date.now()-172800000).toISOString(), date: new Date(Date.now()-172800000).toISOString(), recipientAvatar: null, merchant: 'Uber' },
-    { id: 'tx-4', userId: 'demo-user', type: 'transfer', amount: -500, currency: 'USD', description: 'Transfer to Savings', status: 'completed', createdAt: new Date(Date.now()-259200000).toISOString(), date: new Date(Date.now()-259200000).toISOString(), recipientAvatar: null },
-    { id: 'tx-5', userId: 'demo-user', type: 'card_purchase', amount: -89.00, currency: 'USD', description: 'Starbucks', status: 'completed', createdAt: new Date(Date.now()-345600000).toISOString(), date: new Date(Date.now()-345600000).toISOString(), recipientAvatar: null, merchant: 'Starbucks' },
-    { id: 'tx-6', userId: 'demo-user', type: 'deposit', amount: 1500, currency: 'USD', description: 'Freelance payment', status: 'completed', createdAt: new Date(Date.now()-432000000).toISOString(), date: new Date(Date.now()-432000000).toISOString() },
-  ],
+  // NOTE: transactions are seeded by src/services/mockData.ts → seedData(),
+  // which calls useStore.getState().setTransactions(mockTransactions).
+  // Do NOT inline-seed here — it creates a duplicate-key lint warning and
+  // the second declaration silently overrides the first.
   cards: [
     {
       id: 'card-default-1',
@@ -376,6 +373,16 @@ export const useStore = create<AppState>((set, get) => ({
 
   // Notification actions
   setNotifications: (notifications) => set({ notifications }),
+
+  // Prepend a single notification (used by the realtime subscriber).
+  // De-duplicates by id so a Supabase echo + a local optimistic insert
+  // don't both end up in the list.
+  addNotification: (notification) =>
+    set((state) =>
+      state.notifications.some((n) => n.id === notification.id)
+        ? state
+        : { notifications: [notification, ...state.notifications] }
+    ),
 
   markNotificationRead: (id) =>
     set((state) => ({

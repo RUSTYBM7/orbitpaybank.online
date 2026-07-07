@@ -1,34 +1,39 @@
-# OrbitPay Credit Union — robots.txt
-# https://orbitpaybank.online
-
+# Robots.txt for orbitpaybank.online
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /app/settings/security
-Disallow: /api/
+Disallow: /admin
+Disallow: /app
+Disallow: /applicant
+Disallow: /enroll/cards/services
+Disallow: /onboard
+Disallow: /auth
+Disallow: /support
 
-# Crawl-delay for non-major bots
-User-agent: *
-Crawl-delay: 1
+# AI training crawlers — block OpenAI, Anthropic, Google Bard, etc.
+User-agent: GPTBot
+Disallow: /
+User-agent: ChatGPT-User
+Disallow: /
+User-agent: Claude-Web
+Disallow: /
+User-agent: ClaudeBot
+Disallow: /
+User-agent: CCBot
+Disallow: /
+User-agent: anthropic-ai
+Disallow: /
+User-agent: Google-Extended
+Disallow: /
 
-# Sitemap
-Sitemap: https://orbitpaybank.online/sitemap.xml
-
-# Major search engines
+# Major search engines — explicitly allow
 User-agent: Googlebot
 Allow: /
-
 User-agent: Bingbot
 Allow: /
-
+User-agent: DuckDuckBot
+Allow: /
 User-agent: Slurp
 Allow: /
 
-User-agent: DuckDuckBot
-Allow: /
-
-User-agent: Baiduspider
-Allow: /
-
-User-agent: YandexBot
-Allow: /
+# Sitemap location
+Sitemap: https://orbitpaybank.online/sitemap.xml

@@ -48,6 +48,45 @@ module.exports = {
         // Surface Colors
         surface: {
           dark: '#0A1F44',
+          // Bright palette — used by the redesigned landing/home screens.
+          // Inspired by the OrbitPay 2025 brand template (green-glass +
+          // yellow gradient accents).
+          mint: {
+            50: '#F2FBF4',
+            100: '#E1F6E5',
+            200: '#C2ECC8',
+            300: '#94DCA0',
+            400: '#5DC370',
+            500: '#38A84D',
+            600: '#26863B',
+            700: '#1F6A30',
+            800: '#1B5528',
+            900: '#174521',
+          },
+          lime: {
+            50: '#FBFFE3',
+            100: '#F7FFC2',
+            200: '#EEFF8C',
+            300: '#E1FF47',
+            400: '#D5FA1E',
+            500: '#C2E600',
+            600: '#9CB800',
+            700: '#778B02',
+            800: '#5F6F08',
+            900: '#4F5B0B',
+          },
+          butter: {
+            50: '#FFFDE8',
+            100: '#FFFAB6',
+            200: '#FFF578',
+            300: '#FFEF3A',
+            400: '#FFE500',
+            500: '#E6C900',
+            600: '#B89D00',
+            700: '#8C7600',
+            800: '#6B5A00',
+            900: '#524500',
+          },
           light: '#FFFFFF',
           card: '#FFFFFF',
           elevated: '#F8FAFC',
@@ -170,6 +209,10 @@ module.exports = {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
         },
+        "marquee": {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -178,6 +221,7 @@ module.exports = {
         "orbit-float": "orbit-float 6s ease-in-out infinite",
         "orbit-pulse": "orbit-pulse 2s ease-in-out infinite",
         "orbit-shimmer": "orbit-shimmer 2s ease-in-out infinite",
+        "marquee": "marquee 30s linear infinite",
       },
       // Typography Scale (from design tokens)
       fontSize: {
