@@ -11,3 +11,12 @@ createRoot(document.getElementById('root')!).render(
     </BrowserRouter>
   </StrictMode>,
 )
+
+// FIX-13: register service worker for the admin PWA shell too
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/service-worker.js')
+      .catch((err) => console.warn('[orbitpay-admin] service worker registration failed', err));
+  });
+}

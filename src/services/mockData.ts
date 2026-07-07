@@ -916,7 +916,7 @@ export const mockAdminUsers: AdminUser[] = [
   {
     id: 'admin_1',
     userId: 'adm1',
-    email: 'admin@orbitpay.com',
+    email: 'admin@orbitpaybank.online',
     fullName: 'System Admin',
     role: 'super_admin',
     permissions: ['all'],
@@ -928,7 +928,7 @@ export const mockAdminUsers: AdminUser[] = [
   {
     id: 'admin_2',
     userId: 'adm2',
-    email: 'support@orbitpay.com',
+    email: 'support@orbitpaybank.online',
     fullName: 'Support Team',
     role: 'support_admin',
     permissions: ['chat', 'view_users', 'view_transactions'],
@@ -940,7 +940,7 @@ export const mockAdminUsers: AdminUser[] = [
   {
     id: 'admin_3',
     userId: 'adm3',
-    email: 'finance@orbitpay.com',
+    email: 'finance@orbitpaybank.online',
     fullName: 'Finance Admin',
     role: 'finance_admin',
     permissions: ['transactions', 'kyc', 'view_users'],

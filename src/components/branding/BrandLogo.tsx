@@ -1,20 +1,23 @@
 /**
- * Orbitpay Finance - Centralized Brand Logo Component
+ * Orbitpay Finance — central brand logo component.
  *
- * Single source of truth for all logo usage throughout the application.
- * Import and use this component instead of inline images for consistent branding.
+ * Uses the user-provided master SVG logo (the "Orbitpay Finance" mark with
+ * two diagonal stripes). The same file is served everywhere; only the
+ * rendered height changes per variant.
  */
 
 import React from 'react';
 
-// Using the OrbitPay corporate banner image as the main logo
-export const BRAND_LOGO_URL = '/assets/logo/orbitpay-logo.png';
+// Authoritative user-provided master logo files.
+export const BRAND_LOGO_URL = '/assets/logo/orbitpay-master-logo.svg'; // master SVG wordmark
+export const BRAND_MARK_URL = '/assets/logo/orbitpay-master-logo.svg'; // same SVG, sized for compact use
 
 export interface BrandLogoProps {
   variant?: 'header' | 'nav' | 'hero' | 'footer' | 'auth' | 'card' | 'modal' | 'settings' | 'compact' | 'full';
   className?: string;
   onDark?: boolean;
   style?: React.CSSProperties;
+  src?: string;
 }
 
 const variantClasses = {
@@ -35,10 +38,12 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   className = '',
   onDark = false,
   style,
+  src,
 }) => {
+  const logoSrc = src || BRAND_LOGO_URL;
   return (
     <img
-      src={BRAND_LOGO_URL}
+      src={logoSrc}
       alt="Orbitpay Finance"
       className={`
         object-contain object-left
@@ -47,73 +52,25 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         ${className}
       `}
       style={{
-        maxWidth: '280px',
+        maxWidth: '320px',
         ...style,
       }}
     />
   );
 };
 
-/**
- * Logo-only icon (for cards, receipts, etc.)
- */
-export const BrandIcon: React.FC<{ className?: string }> = ({ className = '' }) => (
-  <svg
-    viewBox="0 0 48 48"
-    className={className}
-    aria-label="Orbitpay"
-  >
-    <rect x="4" y="4" width="40" height="40" rx="8" fill="#111d35" />
-    <path
-      d="M12 36L20 12h4l8 24h-4l-2-6h-8l-2 6h-4zm6-10h6l-3-9-3 9z"
-      fill="#A8E6CF"
-    />
-    <path
-      d="M14 16h4M14 24h4M14 32h4"
-      stroke="#A8E6CF"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
-  </svg>
-);
-
-/**
- * Full logo with icon and text
- */
+// Square mark for compact uses (nav button, app icon, etc.)
 export const BrandMark: React.FC<{
-  variant?: 'light' | 'dark';
-  showIcon?: boolean;
   className?: string;
-}> = ({ variant = 'dark', showIcon = true, className = '' }) => {
-  const textColor = variant === 'dark' ? '#111d35' : '#ffffff';
-
-  return (
-    <div className={`flex items-center gap-2 ${className}`}>
-      {showIcon && (
-        <svg viewBox="0 0 48 48" className="h-8 w-auto">
-          <rect x="4" y="4" width="40" height="40" rx="8" fill="#111d35" />
-          <path
-            d="M12 36L20 12h4l8 24h-4l-2-6h-8l-2 6h-4zm6-10h6l-3-9-3 9z"
-            fill="#A8E6CF"
-          />
-        </svg>
-      )}
-      <div className="flex flex-col">
-        <span
-          className="text-lg font-bold tracking-tight leading-none"
-          style={{ color: textColor }}
-        >
-          Orbitpay
-        </span>
-        <span
-          className="text-xs font-medium tracking-wider uppercase leading-none"
-          style={{ color: textColor, opacity: 0.7 }}
-        >
-          Finance
-        </span>
-      </div>
-    </div>
-  );
-};
+  size?: number;
+  src?: string;
+}> = ({ className = '', size, src }) => (
+  <img
+    src={src || BRAND_MARK_URL}
+    alt="Orbitpay Finance"
+    className={className}
+    style={size ? { height: size, width: size } : undefined}
+  />
+);
 
 export default BrandLogo;

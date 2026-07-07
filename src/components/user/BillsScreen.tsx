@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GlassSurface, GlassCard, GlassBadge, GlassButton, GlassInput } from '@/components/glass';
+import { PhotoHero, TEMPLATE_PHOTOS } from '@/components/bright';
 import { useStore } from '@/store';
 import {
   Receipt, Plus, Calendar, Clock, Check, AlertCircle,
@@ -15,6 +17,7 @@ const aiBillInsights = [
 ];
 
 export default function BillsScreen() {
+  const navigate = useNavigate();
   const { billPayments, user } = useStore();
   const [showPayModal, setShowPayModal] = useState(false);
   const [selectedBiller, setSelectedBiller] = useState<string | null>(null);
@@ -86,6 +89,16 @@ export default function BillsScreen() {
 
   return (
     <div className="p-5 space-y-5 animate-fade-in pb-6">
+      {/* Hero photo — template /imgs/ library */}
+      <PhotoHero
+        imageUrl={TEMPLATE_PHOTOS.bills.hero}
+        eyebrow="Bill Pay"
+        title="Never miss a due date"
+        description="Schedule rent, utilities, subscriptions — auto-pay, get reminders, and earn cashback on every bill."
+        accent="mint"
+        ctaLabel="Add a bill"
+        onCta={() => setShowPayModal(true)}
+      />
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

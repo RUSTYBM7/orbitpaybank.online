@@ -1,0 +1,66 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Build & upload iOS to TestFlight"
+  lane :beta do
+    build_app(
+      workspace: "ios/App/App.xcworkspace",
+      scheme: "App",
+      configuration: "Release",
+      output_directory: "./build",
+      output_name: "OrbitPay.ipa",
+      export_method: "app-store",
+      xcargs: "-allowProvisioningUpdates"
+    )
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true
+    )
+  end
+
+  desc "Build & upload iOS to App Store"
+  lane :release do
+    build_app(
+      workspace: "ios/App/App.xcworkspace",
+      scheme: "App",
+      configuration: "Release",
+      output_directory: "./build",
+      output_name: "OrbitPay.ipa",
+      export_method: "app-store"
+    )
+    upload_to_app_store(
+      skip_metadata: true,
+      skip_screenshots: true,
+      force: true
+    )
+  end
+end
+
+platform :android do
+  desc "Build & upload Android to Play Console (internal track)"
+  lane :beta do
+    gradle(
+      project_dir: "android",
+      task: "bundleRelease",
+      flags: "--no-daemon --warning-mode all"
+    )
+    upload_to_play_store(
+      track: "internal",
+      aab: "android/app/build/outputs/bundle/release/app-release.aab",
+      json_key: ENV["GOOGLE_PLAY_JSON_KEY_PATH"]
+    )
+  end
+
+  desc "Build & upload Android to Play Console (production)"
+  lane :release do
+    gradle(
+      project_dir: "android",
+      task: "bundleRelease",
+      flags: "--no-daemon --warning-mode all"
+    )
+    upload_to_play_store(
+      track: "production",
+      aab: "android/app/build/outputs/bundle/release/app-release.aab",
+      json_key: ENV["GOOGLE_PLAY_JSON_KEY_PATH"]
+    )
+  end
+end

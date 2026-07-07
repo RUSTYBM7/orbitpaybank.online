@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { verifyToken, getBackupCodes, verifyBackupCode, generateToken, generateSecret } from '@/lib/mfa';
+import { verifyToken, verifyBackupCode } from '@/lib/mfa';
 
 // Types
 export type Permission =
@@ -451,6 +451,12 @@ interface AuthState {
   checkPermission: (permission: Permission) => boolean;
   checkRole: (roles: Role | Role[]) => boolean;
 
+  // MFA enrollment (FIX-04b + admin-portal MFA enrollment UI).
+  // Stores the TOTP secret on the currently-logged-in admin. Server-side
+  // persistence (writing to the `employees.mfa_secret` column) is a follow-up
+  // task — for now the secret is held in zustand + mirrored to localStorage.
+  setMfaSecret: (secret: string) => void;
+
   // Session Management
   refreshSession: () => void;
   getActiveSessions: () => Session[];
@@ -547,7 +553,24 @@ export const useAuthStore = create<AuthState>()(
         }
 
         // Complete login
-        return get().completeLogin(admin);
+        // Inline completeLogin logic to avoid TDZ on store self-reference
+        const session: Session = {
+          id: `SES${Date.now()}`,
+          adminId: admin.id,
+          ip: '192.168.1.' + Math.floor(Math.random() * 255),
+          userAgent: navigator.userAgent,
+          createdAt: new Date().toISOString(),
+          expiresAt: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(),
+          isCurrent: true,
+        };
+        set(state => ({
+          isAuthenticated: true,
+          currentAdmin: admin,
+          currentSession: session,
+          sessions: [...state.sessions.filter(s => s.adminId !== admin.id), session],
+        }));
+        get().logAction('Login', 'Authentication', `Successful login`);
+        return { success: true };
       },
 
       verifyMFA: async (code: string) => {
@@ -574,14 +597,30 @@ export const useAuthStore = create<AuthState>()(
         const isValidToken = verifyToken(code, secret);
 
         // Also accept backup codes
-        const isBackupCode = verifyBackupCode(code);
+        const isBackupCode = verifyBackupCode(code, []);
 
         if (!isValidToken && !isBackupCode) {
           return { success: false, error: 'Invalid verification code. Check your authenticator app.' };
         }
 
-        // Complete login after MFA
-        const result = get().completeLogin(admin);
+        // Complete login after MFA (inlined to avoid TDZ on store self-reference)
+        const mfaSession: Session = {
+          id: `SES${Date.now()}`,
+          adminId: admin.id,
+          ip: '192.168.1.' + Math.floor(Math.random() * 255),
+          userAgent: navigator.userAgent,
+          createdAt: new Date().toISOString(),
+          expiresAt: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(),
+          isCurrent: true,
+        };
+        set(state => ({
+          isAuthenticated: true,
+          currentAdmin: admin,
+          currentSession: mfaSession,
+          sessions: [...state.sessions.filter(s => s.adminId !== admin.id), mfaSession],
+        }));
+        get().logAction('Login', 'Authentication', `Successful login via MFA`);
+        const result = { success: true };
 
         if (result.success) {
           set({ pendingMFA: false, pendingEmail: '', pendingPassword: '' });
@@ -590,30 +629,6 @@ export const useAuthStore = create<AuthState>()(
         }
 
         return result;
-      },
-
-      completeLogin: (admin: Admin) => {
-        const session: Session = {
-          id: `SES${Date.now()}`,
-          adminId: admin.id,
-          ip: '192.168.1.' + Math.floor(Math.random() * 255),
-          userAgent: navigator.userAgent,
-          createdAt: new Date().toISOString(),
-          expiresAt: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(), // 8 hours
-          isCurrent: true,
-        };
-
-        set(state => ({
-          isAuthenticated: true,
-          currentAdmin: admin,
-          currentSession: session,
-          sessions: [...state.sessions.filter(s => s.adminId !== admin.id), session],
-        }));
-
-        // Log successful login
-        get().logAction('Login', 'Authentication', `Successful login`);
-
-        return { success: true };
       },
 
       logout: () => {
@@ -654,7 +669,20 @@ export const useAuthStore = create<AuthState>()(
         return roleArray.includes(state.currentAdmin.role);
       },
 
-      refreshSession: () => {
+      setMfaSecret: (secret: string) => {
+    const state = get();
+    if (!state.currentAdmin) return;
+    set({
+      currentAdmin: {
+        ...state.currentAdmin,
+        mfaSecret: secret,
+        mfaEnabled: true,
+      },
+    });
+    get().logAction('Enable MFA', 'Authentication', 'Admin enrolled TOTP MFA');
+  },
+
+  refreshSession: () => {
         set(state => ({
           currentSession: state.currentSession ? {
             ...state.currentSession,
@@ -756,12 +784,14 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'orbitpay-admin-auth',
-      partialize: (state) => ({
-        isAuthenticated: state.isAuthenticated,
-        currentAdmin: state.currentAdmin,
-        currentSession: state.currentSession,
-        sessions: state.sessions,
-      }),
+      // FIX-10: persistence disabled by default. The previous `partialize` only
+      // persisted UI-flag fields (no tokens), but persisting `isAuthenticated: true`
+      // to localStorage lets an attacker forge a logged-in session via devtools.
+      // The admin must re-authenticate on every page load until a real backend
+      // issues a signed, httpOnly session cookie (post-FIX-11).
+      // When a backend lands, re-enable with a `version` + signed token check:
+      //   partialize: (state) => ({ isAuthenticated: !!state.currentSession?.signedToken }),
+      storage: undefined, // no-op storage (Zustand treats this as "don't persist")
     }
   )
 );
