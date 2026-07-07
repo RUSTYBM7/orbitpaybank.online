@@ -36,17 +36,19 @@ export interface UserManagement {
   totalBalance: number;
 }
 
-// Auth
-let adminToken: string | null = localStorage.getItem('orbitpay_admin_token');
+// Auth — FIX-10: tokens held in memory only (not localStorage) until a real
+// backend issues httpOnly cookies. The previous code persisted the admin token
+// to localStorage, which is XSS-prone: any injected script could steal the
+// session. Until FIX-11 ships a backend, the admin will need to re-login
+// after every page reload. This is acceptable for the demo and far safer.
+let adminToken: string | null = null;
 
 export const setAdminToken = (token: string) => {
   adminToken = token;
-  localStorage.setItem('orbitpay_admin_token', token);
 };
 
 export const clearAdminToken = () => {
   adminToken = null;
-  localStorage.removeItem('orbitpay_admin_token');
 };
 
 export const getAdminHeader = () => {

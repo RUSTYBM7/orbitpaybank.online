@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GlassCard, GlassButton, GlassBadge } from '@/components/glass';
+import { PhotoHero, TEMPLATE_PHOTOS } from '@/components/bright';
 import { useStore } from '@/store';
 import {
   Activity,
@@ -101,6 +103,7 @@ const cryptoTransactions = [
 ];
 
 export default function CryptoScreen() {
+  const navigate = useNavigate();
   const { user } = useStore();
   const [activeTab, setActiveTab] = useState<CryptoTab>('portfolio');
   const [selectedAsset, setSelectedAsset] = useState<CryptoAsset>(cryptoAssets[0]);
@@ -128,6 +131,16 @@ export default function CryptoScreen() {
 
   return (
     <div className="p-5 space-y-5 animate-fade-in">
+      {/* Hero photo — template /imgs/ library */}
+      <PhotoHero
+        imageUrl={TEMPLATE_PHOTOS.crypto.hero}
+        eyebrow="Crypto"
+        title="Trade. Earn. Hold."
+        description="BTC, ETH, and 200+ tokens — buy, sell, swap, and stake from the same wallet that powers your bank."
+        accent="cyan"
+        ctaLabel="Explore markets"
+        onCta={() => navigate('/app/invest')}
+      />
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

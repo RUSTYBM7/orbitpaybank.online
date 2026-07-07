@@ -1,0 +1,4 @@
+app_identifier "com.orbitpay.creditunion"
+apple_id "rusty@orbitpaybank.online"
+team_id "APPLE_TEAM_ID_HERE"
+itc_team_id "APPCONNECT_TEAM_ID_HERE"

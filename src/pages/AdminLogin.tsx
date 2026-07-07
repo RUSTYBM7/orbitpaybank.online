@@ -7,7 +7,7 @@ import { Shield, Lock, Eye, EyeOff, Fingerprint, AlertCircle } from 'lucide-reac
 export default function AdminLogin() {
   const navigate = useNavigate();
   const { loginAdmin } = useStore();
-  const [email, setEmail] = useState('admin@orbitpay.com');
+  const [email, setEmail] = useState('admin@orbitpaybank.online');
   const [password, setPassword] = useState('');
   const [totp, setTotp] = useState('');
   const [step, setStep] = useState<'credentials' | '2fa'>('credentials');
@@ -44,7 +44,7 @@ export default function AdminLogin() {
     const admin = {
       id: 'admin_1',
       userId: 'adm1',
-      email: 'admin@orbitpay.com',
+      email: 'admin@orbitpaybank.online',
       fullName: 'System Admin',
       role: 'super_admin' as const,
       permissions: ['all'],

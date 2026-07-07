@@ -87,7 +87,7 @@ const FooterSection = () => {
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-emerald-400" />
-                <span>support@orbitpay.com</span>
+                <span>support@orbitpaybank.online</span>
               </div>
             </div>
           </div>

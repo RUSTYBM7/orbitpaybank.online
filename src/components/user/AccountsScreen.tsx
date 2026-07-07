@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GlassSurface, GlassCard, GlassBadge, GlassButton, GlassInput } from '@/components/glass';
+import { PhotoHero, TEMPLATE_PHOTOS } from '@/components/bright';
 import { useStore } from '@/store';
 import {
   Wallet, Plus, PiggyBank, Building2, Check,
@@ -15,6 +17,7 @@ const aiAccountInsights = [
 ];
 
 export default function AccountsScreen() {
+  const navigate = useNavigate();
   const { bankAccounts, user, addBankAccount, setPrimaryAccount } = useStore();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showBalance, setShowBalance] = useState(true);
@@ -70,6 +73,16 @@ export default function AccountsScreen() {
 
   return (
     <div className="p-5 space-y-5 animate-fade-in pb-6">
+      {/* Hero photo — template /imgs/ library */}
+      <PhotoHero
+        imageUrl={TEMPLATE_PHOTOS.accounts.hero}
+        eyebrow="Accounts"
+        title="All your money, one orbit"
+        description="Checking, savings, and credit in a single dashboard — balances, statements, and transfers at a glance."
+        accent="emerald"
+        ctaLabel="Open new account"
+        onCta={() => setShowCreateModal(true)}
+      />
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

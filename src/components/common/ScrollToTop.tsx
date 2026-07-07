@@ -43,7 +43,7 @@ export default function ScrollToTop({ threshold = 300, smooth = true }: ScrollTo
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
           transition={{ duration: 0.2 }}
           onClick={scrollToTop}
-          className="fixed bottom-24 right-4 z-[60] w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/30 flex items-center justify-center hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300 active:scale-95"
+          className="fixed bottom-24 right-4 z-[60] w-12 h-12 rounded-full bg-gradient-to-br from-emerald-400/55 to-teal-400/55 text-white shadow-md shadow-emerald-500/20 backdrop-blur-md border border-white/25 flex items-center justify-center hover:from-emerald-500/80 hover:to-teal-500/80 hover:shadow-lg hover:shadow-emerald-500/40 transition-all duration-300 active:scale-95"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           aria-label="Scroll to top"

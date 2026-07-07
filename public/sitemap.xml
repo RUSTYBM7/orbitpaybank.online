@@ -1,70 +1,128 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://orbitpaybank.online/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <image:image>
-      <image:loc>https://orbitpaybank.online/assets/images/corporate-banner.png</image:loc>
-      <image:title>OrbitPay Credit Union — Enterprise Digital Banking</image:title>
-    </image:image>
   </url>
-
   <url>
-    <loc>https://orbitpaybank.online/app</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://orbitpaybank.online/app/transfer</loc>
-    <changefreq>daily</changefreq>
+    <loc>https://orbitpaybank.online/personal</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
   <url>
-    <loc>https://orbitpaybank.online/app/accounts</loc>
-    <changefreq>daily</changefreq>
+    <loc>https://orbitpaybank.online/business</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
   <url>
-    <loc>https://orbitpaybank.online/app/cards</loc>
-    <changefreq>daily</changefreq>
+    <loc>https://orbitpaybank.online/loans</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
   <url>
-    <loc>https://orbitpaybank.online/app/loans</loc>
-    <changefreq>weekly</changefreq>
+    <loc>https://orbitpaybank.online/cards</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://orbitpaybank.online/investments</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://orbitpaybank.online/digital</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-
   <url>
-    <loc>https://orbitpaybank.online/app/invest</loc>
-    <changefreq>weekly</changefreq>
+    <loc>https://orbitpaybank.online/security</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-
   <url>
-    <loc>https://orbitpaybank.online/app/crypto</loc>
+    <loc>https://orbitpaybank.online/education</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://orbitpaybank.online/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://orbitpaybank.online/rates</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://orbitpaybank.online/fees</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://orbitpaybank.online/faq</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://orbitpaybank.online/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://orbitpaybank.online/careers</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://orbitpaybank.online/news</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
-
   <url>
-    <loc>https://orbitpaybank.online/app/bills</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://admin.orbitpaybank.online/</loc>
-    <changefreq>daily</changefreq>
+    <loc>https://orbitpaybank.online/accessibility</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
-
+  <url>
+    <loc>https://orbitpaybank.online/privacy</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://orbitpaybank.online/terms</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://orbitpaybank.online/cookies</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://orbitpaybank.online/integrations</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://orbitpaybank.online/auth/sign-in</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://orbitpaybank.online/auth/sign-up</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://orbitpaybank.online/enroll</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://orbitpaybank.online/onboard</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
