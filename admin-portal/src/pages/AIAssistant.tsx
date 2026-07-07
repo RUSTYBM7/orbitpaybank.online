@@ -128,7 +128,9 @@ export default function AIAssistant() {
 
     return {
       id, role: 'assistant', timestamp: new Date(),
-      content: 'I can help with: customer summaries, fraud analysis, KYC status, revenue reporting, audit trail explanation, and operational recommendations. Try one of the suggestions below, or ask me anything about the data.',
+      content:
+        'I can help with: customer summaries, fraud analysis, KYC status, revenue reporting, audit trail explanation, and operational recommendations. Try one of the suggestions below, or ask me anything about the data.\n\n' +
+        '__Note__: this is currently a keyword-matcher that returns canned responses. To enable a real LLM (OpenAI / Anthropic / Gemini), set VITE_OPENAI_API_KEY (or similar) in admin-portal/.env.local and replace the `generateResponse` function below with a streaming fetch to the provider.',
       suggestions: suggestedPrompts.slice(0, 3).map(p => p.label),
     };
   };

@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GlassSurface, GlassCard, GlassBadge, GlassButton, GlassInput } from '@/components/glass';
+import { PhotoHero, TEMPLATE_PHOTOS } from '@/components/bright';
 import { useStore } from '@/store';
 import {
   ArrowRight,
@@ -18,6 +20,7 @@ import {
 } from 'lucide-react';;
 
 export default function ScheduledScreen() {
+  const navigate = useNavigate();
   const { scheduledTransfers, user, updateScheduledTransfer, deleteScheduledTransfer } = useStore();
   const [showCreateModal, setShowCreateModal] = useState(false);
 
@@ -55,6 +58,16 @@ export default function ScheduledScreen() {
 
   return (
     <div className="p-5 space-y-5 animate-fade-in pb-6">
+      {/* Hero photo — template /imgs/ library */}
+      <PhotoHero
+        imageUrl={TEMPLATE_PHOTOS.scheduled.hero}
+        eyebrow="Scheduled"
+        title="Plan every dollar ahead"
+        description="Recurring transfers, future-dated payments, and budget auto-rules that run themselves."
+        accent="emerald"
+        ctaLabel="Schedule a transfer"
+        onCta={() => setShowCreateModal(true)}
+      />
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-[#0A0A0A]">Scheduled</h1>
