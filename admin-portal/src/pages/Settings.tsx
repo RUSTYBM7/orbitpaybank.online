@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Settings as SettingsIcon, DollarSign, Percent, Globe, MapPin, Mail, MessageSquare, Key, Flag, Wrench, FileText, CreditCard, Bell } from 'lucide-react';
+import { Settings as SettingsIcon, DollarSign, Percent, Globe, MapPin, Mail, MessageSquare, Key, Flag, Wrench, FileText, CreditCard, Bell, Shield, ArrowRight } from 'lucide-react';
 import * as api from '@/lib/api-live';
 
 const tabs = [
@@ -297,7 +297,33 @@ export default function Settings() {
             </div>
           )}
 
-          {!['general','currencies','rates','fees','feature_flags','maintenance','api_keys','email_templates','countries','branches'].includes(tab) && (
+          {tab === 'security' && (
+            <div>
+              <h2 className="text-xl font-bold text-white mb-4">Security</h2>
+              <p className="text-sm text-slate-400 mb-4">
+                Account-level security controls. Per-admin TOTP enrollment lives in its own page.
+              </p>
+              <div className="space-y-3">
+                <a
+                  href="/settings/mfa"
+                  className="flex items-center justify-between p-4 bg-slate-900/30 border border-slate-700 rounded-xl hover:border-emerald-500/40 hover:bg-slate-900/60 transition-colors group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-emerald-500/15 flex items-center justify-center">
+                      <Shield className="w-5 h-5 text-emerald-400" />
+                    </div>
+                    <div>
+                      <p className="text-white font-medium">Two-Factor Authentication</p>
+                      <p className="text-xs text-slate-400">Manage TOTP MFA for your admin account</p>
+                    </div>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 transition-colors" />
+                </a>
+              </div>
+            </div>
+          )}
+
+          {!['general','currencies','rates','fees','feature_flags','maintenance','api_keys','email_templates','countries','branches','security'].includes(tab) && (
             <div className="text-center py-16">
               <h2 className="text-xl font-bold text-white capitalize">{tab.replace(/_/g, ' ')}</h2>
               <p className="text-slate-400 mt-2">Full configuration UI for {tab.replace(/_/g, ' ')}</p>

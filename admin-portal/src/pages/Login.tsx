@@ -18,7 +18,7 @@ const statuses = [
 
 export default function AdminLogin() {
   const navigate = useNavigate();
-  const { currentAdmin, login, loginDemo, isLoading, error } = useAuthStore();
+  const { currentAdmin, login, verifyMFA, loginDemo, isLoading, error } = useAuthStore();
   const [email, setEmail] = useState('admin@orbitpay.demo');
   const [password, setPassword] = useState('');
   const [mfaCode, setMfaCode] = useState('');
@@ -32,17 +32,30 @@ export default function AdminLogin() {
   const handleCreds = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await login(email, password);
-      setStage('mfa');
+      const result = await login(email, password);
+      // FIX-14: if the admin doesn't have MFA enabled, login completes immediately.
+      // If MFA is enabled, move to the MFA challenge stage.
+      if (result?.success && !result?.requiresMFA) {
+        navigate('/dashboard');
+      } else if (result?.success && result?.requiresMFA) {
+        setStage('mfa');
+      }
     } catch {}
   };
 
   const handleMfa = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (mfaCode.length === 6 || mfaCode === '000000') {
-      // Mock MFA - any 6-digit code accepted in demo
+    // FIX-14: wire to the real verifyMFA action from authStore.
+    // Falls back to the demo "any 6 digits" path only when explicitly opted-in
+    // (VITE_DEMO_ACCEPT_ANY_MFA=true in admin-portal/.env.local).
+    const acceptAny =
+      (import.meta.env.VITE_DEMO_ACCEPT_ANY_MFA as string | undefined) === 'true';
+    if (acceptAny && mfaCode.length === 6) {
       navigate('/dashboard');
+      return;
     }
+    const result = await verifyMFA(mfaCode);
+    if (result?.success) navigate('/dashboard');
   };
 
   return (
@@ -160,7 +173,7 @@ export default function AdminLogin() {
                   Verify & Login <ArrowRight className="w-5 h-5" />
                 </button>
                 <p className="text-center text-xs text-slate-500">
-                  For demo, type any 6 digits or <button type="button" onClick={() => setMfaCode('000000')} className="text-blue-400 hover:underline">autofill</button>
+                  Enter the 6-digit code from your authenticator app. To accept any 6 digits in dev mode, set <code className="text-slate-400">VITE_DEMO_ACCEPT_ANY_MFA=true</code> in admin-portal/.env.local.
                 </p>
               </form>
             </>

@@ -51,7 +51,7 @@ export default function AboutSettings() {
     {
       id: 'email',
       title: 'Email Support',
-      description: 'support@orbitpay.com',
+      description: 'support@orbitpaybank.online',
       icon: <Mail className="w-5 h-5" />,
       action: () => showToast('Opening email...', 'success'),
     },
