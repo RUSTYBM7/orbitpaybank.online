@@ -910,3 +910,10 @@
 **/.git_backup_by_agent/
 .vercel
 .env*
+
+# Sandbox debris — not part of project
+user_input_files/
+download/
+extract/
+tmp/
+browser/

@@ -1,19 +1,34 @@
 ---
-name: Feature Request
-about: Suggest an idea for this project
-title: '[FEATURE] '
-labels: enhancement
+name: ✨ Feature request
+about: Suggest a new feature or improvement
+title: '[Feature] '
+labels: enhancement, needs-triage
 assignees: ''
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+## The problem
 
-**Describe the solution you'd like**
-A clear description of what you want to happen.
+<!-- What's the user pain? "When I try to X, I have to Y, which is annoying because Z" -->
 
-**Describe alternatives you've considered**
-A clear description of any alternative solutions or features you've considered.
+## The proposed solution
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+<!-- What would you like to see? -->
+
+## Why this matters
+
+<!-- How many users does this affect? How often? -->
+
+## Alternatives considered
+
+<!-- Did you consider other ways to solve this? -->
+
+## Additional context
+
+<!-- Screenshots, mockups, links to similar features elsewhere -->
+
+## Priority
+
+- [ ] P0 (blocking, must-have)
+- [ ] P1 (high, next quarter)
+- [ ] P2 (medium, when there's time)
+- [ ] P3 (nice-to-have)
