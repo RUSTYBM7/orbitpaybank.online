@@ -119,7 +119,7 @@ export default function ReceiptGenerator({ transaction, onClose }: ReceiptGenera
           <div class="qr">QR Code</div>
           <div class="footer">
             <p>Thank you for using OrbitPay Credit Union</p>
-            <p>For support, contact support@orbitpay.com</p>
+            <p>For support, contact support@orbitpaybank.online</p>
           </div>
         </body>
       </html>
@@ -222,7 +222,7 @@ export default function ReceiptGenerator({ transaction, onClose }: ReceiptGenera
             </div>
             <div class="footer">
               <p>Thank you for using OrbitPay Credit Union</p>
-              <p>For support, contact support@orbitpay.com</p>
+              <p>For support, contact support@orbitpaybank.online</p>
             </div>
           </body>
         </html>
@@ -390,7 +390,7 @@ export default function ReceiptGenerator({ transaction, onClose }: ReceiptGenera
           Thank you for using OrbitPay Credit Union
         </p>
         <p className="text-xs text-[#0A0A0A]/20">
-          support@orbitpay.com
+          support@orbitpaybank.online
         </p>
       </div>
     </motion.div>

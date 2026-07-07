@@ -1,13 +1,36 @@
-# Code Owners
+# CODEOWNERS — auto-assigns reviewers based on the files a PR touches.
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
-# Default owner for everything
-*       @RUSTYBM7
+# Default owner
+* @RUSTYBM7
 
-# Frontend
-/src    @RUSTYBM7
-/components @RUSTYBM7
-/pages @RUSTYBM7
+# Member portal
+/src/components/user/ @RUSTYBM7
+/src/pages/UserApp.tsx @RUSTYBM7
+/src/components/portal/ @RUSTYBM7
 
-# Documentation
-*.md    @RUSTYBM7
-/docs   @RUSTYBM7
+# Public site + auth
+/src/components/public/ @RUSTYBM7
+/src/pages/public/ @RUSTYBM7
+/src/pages/auth/ @RUSTYBM7
+/src/pages/enroll/ @RUSTYBM7
+/src/pages/applicant/ @RUSTYBM7
+
+# Admin portal
+/admin-portal/ @RUSTYBM7
+
+# Infrastructure
+/vercel.json @RUSTYBM7
+/vite.config.ts @RUSTYBM7
+/tailwind.config.js @RUSTYBM7
+/package.json @RUSTYBM7
+/admin-portal/package.json @RUSTYBM7
+/.github/ @RUSTYBM7
+
+# Secrets & env
+/.env* @RUSTYBM7
+/supabase/ @RUSTYBM7
+
+# Docs
+/README.md @RUSTYBM7
+/docs/ @RUSTYBM7

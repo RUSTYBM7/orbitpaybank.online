@@ -90,7 +90,7 @@ const faqs: FAQ[] = [
   {
     id: '5',
     question: 'How do I contact support?',
-    answer: 'You can reach our support team 24/7 through this chat, by email at support@orbitpay.com, or by phone.',
+    answer: 'You can reach our support team 24/7 through this chat, by email at support@orbitpaybank.online, or by phone.',
     category: 'Support',
     icon: <MessageCircle className="w-5 h-5" />,
   },
@@ -240,7 +240,7 @@ export default function SupportScreen() {
         </motion.button>
         <motion.button
           whileTap={{ scale: 0.95 }}
-          onClick={() => window.open('mailto:support@orbitpay.com', '_blank')}
+          onClick={() => window.open('mailto:support@orbitpaybank.online', '_blank')}
           className="p-4 bg-white/50 rounded-2xl flex flex-col items-center gap-2"
         >
           <div className="w-10 h-10 rounded-full bg-[#DDA0DD]/30 flex items-center justify-center">
@@ -250,7 +250,7 @@ export default function SupportScreen() {
         </motion.button>
         <motion.button
           whileTap={{ scale: 0.95 }}
-          onClick={() => window.open('tel:+18005551234', '_blank')}
+          onClick={() => window.open('tel:+13238927090', '_blank')}
           className="p-4 bg-white/50 rounded-2xl flex flex-col items-center gap-2"
         >
           <div className="w-10 h-10 rounded-full bg-[#F4F7C0]/30 flex items-center justify-center">

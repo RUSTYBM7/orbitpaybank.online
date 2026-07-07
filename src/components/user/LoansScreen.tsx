@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GlassSurface, GlassCard, GlassBadge, GlassButton, GlassInput } from '@/components/glass';
+import { PhotoHero, TEMPLATE_PHOTOS } from '@/components/bright';
 import { useStore } from '@/store';
 import {
   AlertCircle,
@@ -23,6 +25,7 @@ import {
 } from 'lucide-react';;
 
 export default function LoansScreen() {
+  const navigate = useNavigate();
   const { loans, user, loanPayments } = useStore();
   const [activeTab, setActiveTab] = useState<'active' | 'pending' | 'history'>('active');
   const [showApplyModal, setShowApplyModal] = useState(false);
@@ -76,6 +79,16 @@ export default function LoansScreen() {
 
   return (
     <div className="p-5 space-y-5 animate-fade-in pb-6">
+      {/* Hero photo — template /imgs/ library */}
+      <PhotoHero
+        imageUrl={TEMPLATE_PHOTOS.loans.hero}
+        eyebrow="Lending"
+        title="Loans that fit your life"
+        description="Personal, auto, home, and small-business credit lines — pre-qualified in 60 seconds."
+        accent="emerald"
+        ctaLabel="See my offers"
+        onCta={() => setShowApplyModal(true)}
+      />
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-[#0A0A0A]">My Loans</h1>
