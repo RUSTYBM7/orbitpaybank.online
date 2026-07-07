@@ -43,6 +43,30 @@ function securityHeaders() {
           attrs: { name: 'Permissions-Policy', content: 'camera=(), microphone=(), geolocation=()' },
           inject: 'head',
         },
+        // FIX-18: Content Security Policy. Same-origin scripts + styles,
+        // Supabase + api.orbitpay.com + Twelve Data + TradingView as allowed origins.
+        // Adjust if your actual API hosts differ.
+        {
+          tag: 'meta',
+          attrs: {
+            'http-equiv': 'Content-Security-Policy',
+            content: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://s3.tradingview.com",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "img-src 'self' data: blob: https:",
+              "font-src 'self' data: https://fonts.gstatic.com",
+              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.twelvedata.com",
+              "frame-src 'self' https://www.tradingview.com",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+              "frame-ancestors 'none'",
+              "upgrade-insecure-requests",
+            ].join('; '),
+          },
+          inject: 'head',
+        },
       ]
     },
   }

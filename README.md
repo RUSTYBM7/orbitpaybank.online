@@ -1,237 +1,166 @@
-# OrbitPay Credit Union - Enterprise Digital Banking Platform
+# OrbitPay Credit Union
 
-<p align="center">
-  <img src="https://img.shields.io/badge/version-2.0.0-059669?style=for-the-badge" alt="Version">
-  <img src="https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react" alt="React">
-  <img src="https://img.shields.io/badge/TypeScript-5.9-3178C6?style=for-the-badge&logo=typescript" alt="TypeScript">
-  <img src="https://img.shields.io/badge/Vite-7.3-646CFF?style=for-the-badge&logo=vite" alt="Vite">
-  <img src="https://img.shields.io/badge/License-MIT-059669?style=for-the-badge" alt="License">
-</p>
+Enterprise digital banking platform — member portal + admin operations, end-to-end.
 
-<p align="center">
-  <img src="https://img.shields.io/github/deployments/RUSTYBM7/MyOnlineBank/Production?style=for-the-badge" alt="Vercel Deployment">
-  <img src="https://img.shields.io/github/workflow/status/RUSTYBM7/MyOnlineBank/CI/CD?style=for-the-badge" alt="CI/CD">
-  <img src="https://img.shields.io/website?url=https%3A%2F%2Fmyonlinebank.vercel.app&style=for-the-badge" alt="Website Status">
-</p>
+| | |
+|---|---|
+| **Live** | https://orbitpaybank.online |
+| **Stack** | React 19 · TypeScript · Vite 7 · Zustand · Supabase · framer-motion |
+| **Tests** | 56 member + 28 admin = 84 passing |
+| **Bundle** | 1.15 MB main, 22 lazy-loaded route chunks (avg 12 KB each) |
+| **License** | MIT |
 
 ---
 
-## Overview
-
-**OrbitPay Credit Union** is an enterprise-grade 2030 digital banking platform built with modern web technologies. It delivers a premium, green glass UI experience with comprehensive financial services. The platform includes both a **Member Portal** for customers and a comprehensive **Admin Portal** for secure operations management.
-
-### Key Features
-
-#### Member Portal
-- **Multi-Currency Accounts** - USD, EUR, GBP, and BTC support
-- **Instant Transfers** - Internal, external, wire, and crypto transfers
-- **Virtual & Physical Cards** - Manageable debit cards with spending controls
-- **Bill Pay** - Pay bills with automatic scheduling
-- **Loan Management** - Apply and track personal, home, auto, and business loans
-- **AI Financial Assistant** - Smart insights and recommendations
-- **KYC Verification** - Secure identity verification process
-- **Real-time Notifications** - Stay updated on all account activity
-- **PWA Support** - Installable on mobile devices
-- **Dark/Light Mode** - Premium green glass design system
-
-#### Admin Portal
-- **Executive Dashboard** - KPIs, Charts, Activity feeds
-- **Member Management** - Full CRUD, Suspend/Reactivate, Notes
-- **Account Operations** - Freeze, Unfreeze, Close, Configure fees
-- **KYC Review Center** - Document verification, Risk scoring, Approve/Reject
-- **Loan Management** - Applications, Underwriting, Repayment tracking
-- **Card Operations** - Issue, Block, Replace, PIN reset, Limits
-- **Transaction Center** - Reconciliation, Chargebacks, Disputes
-- **Fraud & Risk Monitoring** - Alerts, AML, Velocity monitoring
-- **Branch Management** - Multi-branch support with performance tracking
-- **Employee Management** - Staff accounts, Roles, Permissions, Activity logs
-- **Financial Oversight** - Revenue, Expenses, Profit & Loss
-- **Compliance Center** - AML reviews, Audit preparation, Policy management
-- **Audit Logging** - Complete action tracking, Immutable logs
-- **System Settings** - Branding, Security policies, Notifications
-- **Help Desk** - Ticket management, Escalation workflows
-
-## Tech Stack
-
-| Category | Technology |
-|----------|------------|
-| Framework | React 19 + TypeScript 5.9 |
-| Build Tool | Vite 7.3 |
-| Styling | TailwindCSS 4, Radix UI |
-| Animations | Framer Motion 12 |
-| State | Zustand 5 |
-| Routing | React Router 7 |
-| Database | Supabase (PostgreSQL) |
-| Auth | Supabase Auth + TOTP MFA |
-| Icons | Lucide React |
-| Charts | Recharts |
-
-## Project Structure
-
-```
-MyOnlineBank/
-├── src/                      # Member Portal Source
-│   ├── components/           # React components
-│   │   ├── auth/            # Authentication components
-│   │   ├── dashboard/       # Dashboard components
-│   │   ├── admin/           # Admin components
-│   │   └── branding/        # Brand components
-│   ├── store/               # Zustand state management
-│   ├── lib/                 # Utilities and Supabase client
-│   ├── types/               # TypeScript definitions
-│   └── pages/               # Route pages
-├── admin-portal/             # Admin Portal (Separate Build)
-│   ├── src/
-│   │   ├── components/      # Admin components
-│   │   ├── pages/           # Admin pages
-│   │   ├── store/           # Admin state
-│   │   └── lib/             # Supabase, MFA utilities
-│   └── supabase/            # Database schema
-├── supabase/                 # Shared database schema
-└── .github/                 # CI/CD workflows
-```
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- pnpm 8+ or npm 9+
-- Supabase account (optional for demo mode)
-
-### Installation
+## Quick start
 
 ```bash
-# Clone the repository
-git clone https://github.com/RUSTYBM7/MyOnlineBank.git
-cd MyOnlineBank
+npm install
+cp .env.example .env.local        # fill in your Supabase + Smartsupp keys
+npm run dev                       # http://localhost:5173
+npm run test                      # vitest
+npm run build                     # production build → dist/
 
-# Install dependencies
-pnpm install
-
-# Copy environment variables
-cp .env.example .env.local
+# Admin portal (separate Vite app, on port 5174)
+cd admin-portal
+npm install
+npm run dev
 ```
 
-### Configuration
+---
 
-Edit `.env.local` with your Supabase credentials:
+## Layout
 
-```env
-VITE_SUPABASE_URL=your-supabase-url
-VITE_SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-key
+```
+/
+├── src/                      # Member portal + public pages
+│   ├── pages/
+│   │   ├── public/           # 19 marketing/info pages (lazy)
+│   │   ├── auth/             # 22 auth flow pages (lazy)
+│   │   ├── enroll/           # Product enrollment hub (lazy)
+│   │   ├── applicant/        # Applicant dashboard (lazy)
+│   │   ├── support/          # Chat / AI / ticket pages (lazy)
+│   │   └── UserApp.tsx       # Authenticated member portal (37 routes)
+│   ├── components/
+│   │   ├── user/             # Member-portal screens (HomeScreen, etc.)
+│   │   ├── auth/             # AuthShell, AuthField, AuthButton
+│   │   ├── public/           # PublicNav, PublicFooter, SupportButton, brandLogos
+│   │   ├── onboard/          # OnboardWizard (10-step enrollment)
+│   │   ├── bright/           # BrightCard, currency pills, phone mockup
+│   │   ├── glass/            # GlassCard, GlassBadge, GlassButton, etc.
+│   │   └── ui/               # shadcn/ui primitives (button, dialog, …)
+│   ├── hooks/                # useNotifications, useAgentSupport, usePortal, …
+│   ├── services/             # supabase client, smartsupp loader, data-layer
+│   ├── state/                # notifications reducer
+│   ├── store/                # Zustand store
+│   ├── i18n/                 # 4 languages, 8 namespaces
+│   ├── __tests__/            # Vitest suite + full-repair-audit
+│   ├── App.tsx               # Top-level router (lazy routes)
+│   └── main.tsx              # Entry
+│
+├── admin-portal/             # Separate Vite app, /admin/*
+│   └── src/
+│       ├── pages/            # AdminDashboard, AdminOverview, etc.
+│       └── store/            # Admin Zustand store
+│
+├── public/                   # Static assets (logo, images, videos)
+├── supabase/                 # Schema + edge functions
+│   ├── schema.sql            # RLS policies + tables
+│   └── functions/            # request-otp, send-payout-sms, fraud-sweep
+├── audit/                    # Initial security + build audit
+├── docs/                     # Handbooks + setup guides
+├── scripts/                  # Deploy scripts
+├── .github/workflows/        # CI/CD (lint + test + build + deploy)
+└── vercel.json               # Vercel config (output: dist, SPA rewrites)
 ```
 
-### Development
+---
 
-```bash
-# Run member portal
-pnpm dev
+## Scripts
 
-# Run admin portal (separate terminal)
-cd admin-portal && pnpm dev
-```
+| Command | Purpose |
+|---|---|
+| `npm run dev` | Local dev server with HMR |
+| `npm run test` | Run member-portal test suite |
+| `npm run test:watch` | Vitest in watch mode |
+| `npm run build` | Production build → `dist/` |
+| `npm run preview` | Serve `dist/` locally |
+| `npm run lint` | Run ESLint (non-blocking) |
 
-### Build
+For the admin portal, run the same commands inside `admin-portal/`.
 
-```bash
-# Build member portal
-pnpm build
+---
 
-# Build admin portal
-cd admin-portal && pnpm build
-```
+## CI/CD
 
-## 🔐 Demo Credentials
+`.github/workflows/ci-cd.yml` runs on every push to `main`:
 
-### Member Portal
-- **Email**: john.smith@email.com
-- **Password**: demo123
+1. Lint + type-check
+2. Test member + admin portals (84 tests total)
+3. Build both
+4. Deploy via Vercel Action (requires `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID_*` repo secrets)
 
-### Admin Portal
-- **Email**: admin@orbitpay.com
-- **Password**: admin123
-- **MFA Code**: Any 6-digit code (demo mode)
+The workflow uses **scoped secrets** — never paste Vercel or Smartsupp tokens into chat or source code.
 
-## 🔒 Security Features
+---
 
-- **Authentication**: Email/Password with MFA support (TOTP)
-- **Session Management**: Auto-refresh tokens, Session timeout
-- **Audit Logging**: All admin actions logged
-- **Role-Based Access**: Granular permissions per module
-- **Row Level Security**: Supabase RLS policies
-- **Security Headers**: X-Frame-Options, CSP, etc.
-- **Input Validation**: Zod schemas
+## Build-time safety net
 
-## Database Setup
+`src/__tests__/full-repair-audit.test.ts` runs every CI build and asserts:
 
-1. Create a new Supabase project at https://supabase.com
-2. Run the schema from `supabase/schema.sql` in the SQL Editor
-3. Enable Row Level Security (RLS) on all tables
-4. Configure authentication settings in Supabase Dashboard
+1. **Every `<Foo />` JSX reference has a matching import or local declaration** — catches the `ArrowUpRight`, `Dashboard3D`, `LineChart` class of bug that crashes at render time.
+2. **Every `import.meta.env.VITE_*` read has a canonical definition** in `.env*` files — catches silently-undefined env vars.
+3. **Every dynamic `import('...')` resolves to an installed package** — catches typos that would fail at chunk-load time.
+
+Together with `no-missing-imports.test.ts`, these tests cover every class of "Can't find variable" crash that's been hit in development.
+
+---
+
+## Environment variables
+
+See `.env.example` for the canonical reference. All `VITE_*` vars ship to client bundles.
+
+| Var | Purpose | Required |
+|---|---|---|
+| `VITE_SUPABASE_URL` | Supabase project URL | yes |
+| `VITE_SUPABASE_ANON_KEY` | Supabase anon JWT (safe to ship) | yes |
+| `VITE_SMARTSUPP_WIDGET_KEY` | Smartsupp widget key (public, ~36 char) | optional |
+| `VITE_SMARTSUPP_LABEL` | Label shown above the chat | optional |
+| `VITE_BUILD_SHA` | Git SHA injected into footer | optional |
+| `VITE_API_URL` | Base URL for admin/portal REST | optional |
+
+⚠️ **The Smartsupp SECRET API key (40 hex chars) is server-side only.** Never put it in a `VITE_*` var, never ship it in client bundles. If you've accidentally pasted it anywhere, rotate it in the Smartsupp dashboard.
+
+---
 
 ## Deployment
 
-### Vercel (Recommended)
+### One-time setup
 
-**Member Portal:**
-1. Connect your GitHub repository to Vercel
-2. Set root directory to `/`
-3. Add environment variables in Vercel dashboard
-4. Deploy automatically with CI/CD
+1. Create two Vercel projects (`user-portal`, `admin-portal`) or use existing.
+2. Add `orbitpaybank.online` as custom domain on `user-portal`.
+3. Create a GitHub PAT with `repo:contents:write` scope and add as `VERCEL_TOKEN` repo secret (or use a Vercel-deploy-hook URL).
+4. Add the env vars above to each Vercel project.
 
-**Admin Portal:**
-1. Create a new Vercel project
-2. Set root directory to `admin-portal`
-3. Add environment variables
-4. Deploy at `/admin` path or subdomain
+### One-command deploy from your laptop
 
-### Environment Variables
-
-**Member Portal (.env.local)**
-```env
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key
-VITE_API_URL=https://api.orbitpay.com
+```bash
+bash scripts/deploy.sh
 ```
 
-**Admin Portal (admin-portal/.env.local)**
-```env
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-key
-```
-
-## GitHub Actions
-
-The repository includes automated CI/CD workflows:
-- **Lint**: Code quality checks
-- **Build**: Production builds
-- **Test**: Unit and integration tests
-- **Deploy**: Automatic Vercel deployment on merge to `main`
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Support
-
-- **Email**: support@orbitpay.com
-- **Phone**: 1-800-ORBITPAY (672-4892)
-- **Website**: https://myonlinebank.vercel.app
-- **Admin Portal**: https://admin.myonlinebank.vercel.app
+This script does `vercel link` + `vercel deploy --prod` against the project configured in `.vercel/project.json`.
 
 ---
 
-Built with security, scalability, and enterprise-grade quality in mind.
+## Documentation
 
-**© 2024 OrbitPay Credit Union. All rights reserved.**
+- `docs/SMARTSUPP_SETUP.md` — How to wire Smartsupp correctly (without leaking the secret key).
+- `audit/` — Initial security + build audit (4 tracks: README claims, runtime, DB, admin).
+- `docs/FIX-ROADMAP.md` — Phased plan for the production-readiness work.
+- `supabase/schema.sql` — Database schema with RLS policies.
+
+---
+
+## License
+
+MIT © OrbitPay Credit Union
