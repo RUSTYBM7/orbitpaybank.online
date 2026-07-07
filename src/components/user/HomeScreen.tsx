@@ -10,6 +10,7 @@ import {
   Bell,
   Bitcoin,
   Bot,
+  ChartLine,
   ChevronRight,
   CreditCard,
   Download,
@@ -95,7 +96,7 @@ export default function HomeScreen() {
 
   const secondaryActions = [
     { icon: <CreditCard className="w-5 h-5" />, label: 'Cards', action: () => navigate('/app/cards') },
-    { icon: <Invest className="w-5 h-5" />, label: 'Invest', action: () => navigate('/app/invest') },
+    { icon: <TrendingUp className="w-5 h-5" />, label: 'Invest', action: () => navigate('/app/invest') },
     { icon: <Bitcoin className="w-5 h-5" />, label: 'Crypto', action: () => navigate('/app/crypto') },
     { icon: <ArrowDownLeft className="w-5 h-5" />, label: 'History', action: () => navigate('/app/transfer') },
   ];
@@ -397,7 +398,7 @@ export default function HomeScreen() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center">
-                <LineChart className="w-4 h-4 text-white" />
+                <ChartLine className="w-4 h-4 text-white" />
               </div>
               <p className="text-sm font-medium text-emerald-800">Spending Categories</p>
             </div>

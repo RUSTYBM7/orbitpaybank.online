@@ -831,9 +831,6 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   setError: (error) => set({ error })
 }));
 
-// Re-export types for convenience
-export type {
-  Member, Account, Transaction, Card, Loan, KYCApplication,
-  FraudAlert, Branch, Employee, Notification, SupportTicket,
-  Campaign, ContentPage, ComplianceItem, AuditLog, DashboardStats
-};
+// Re-exports intentionally omitted — types are declared above.
+// (Previously re-exported here, but TS2484 flagged them as duplicates
+// since they were already exported in the same file.)
